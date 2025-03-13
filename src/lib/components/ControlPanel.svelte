@@ -1,22 +1,26 @@
 <script lang="ts">
-	import { availableKeys, currentKey, type MusicalKey } from '$lib/services';
+	import { CurrentKeyService, CurrentOctaveService, type MusicalKey } from '$lib/services';
 
 	let midiDevices: string[] = [];
 	let selectedDevice: string = '';
 
-	currentKey.key;
-
-	const octaves = [3, 4, 5];
-	let selectedOctave: number = 4;
+	const keyService = CurrentKeyService.getInstance();
+	const octaveService = CurrentOctaveService.getInstance();
 
 	function handleKeyChange(event: Event) {
 		const select = event.target as HTMLSelectElement;
 		const newKey = select.value as MusicalKey;
-		currentKey.key = newKey;
+		keyService.setKey(newKey);
 	}
 
 	function handleRandomKey() {
-		currentKey.setRandomKey();
+		keyService.setRandomKey();
+	}
+
+	function handleOctaveChange(event: Event) {
+		const select = event.target as HTMLSelectElement;
+		const newOctave = parseInt(select.value);
+		octaveService.setOctave(newOctave);
 	}
 </script>
 
@@ -47,11 +51,11 @@
 		</div>
 		<select
 			id="musical-key"
-			value={currentKey.key}
+			value={keyService.currentKey}
 			on:change={handleKeyChange}
 			class="rounded-md border border-[#3A3A3D] bg-[#2A2A2D] px-3 py-2 text-[#F3F0F0] focus:border-[#F3F0F0] focus:outline-none"
 		>
-			{#each availableKeys as key}
+			{#each keyService.availableKeys as key}
 				<option value={key}>{key}</option>
 			{/each}
 		</select>
@@ -61,10 +65,11 @@
 		<label for="octave" class="text-sm text-[#F3F0F0]">Octave</label>
 		<select
 			id="octave"
-			bind:value={selectedOctave}
+			value={octaveService.currentOctave}
+			on:change={handleOctaveChange}
 			class="rounded-md border border-[#3A3A3D] bg-[#2A2A2D] px-3 py-2 text-[#F3F0F0] focus:border-[#F3F0F0] focus:outline-none"
 		>
-			{#each octaves as octave}
+			{#each octaveService.availableOctaves as octave}
 				<option value={octave}>{octave}</option>
 			{/each}
 		</select>
