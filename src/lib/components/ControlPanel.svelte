@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CurrentKeyService, CurrentOctaveService, type MusicalKey } from '$lib';
+	import { CurrentKeyService, CurrentOctaveService, NoteNameHelper, OctaveHelper } from '$lib';
 
 	let midiDevices: string[] = [];
 	let selectedDevice: string = '';
@@ -9,7 +9,8 @@
 
 	function handleKeyChange(event: Event) {
 		const select = event.target as HTMLSelectElement;
-		const newKey = select.value as MusicalKey;
+		const value = select.value as string;
+		const newKey = NoteNameHelper.getNoteNameByName(value);
 		keyService.setKey(newKey);
 	}
 
@@ -19,7 +20,8 @@
 
 	function handleOctaveChange(event: Event) {
 		const select = event.target as HTMLSelectElement;
-		const newOctave = parseInt(select.value);
+		const value = parseInt(select.value);
+		const newOctave = OctaveHelper.getOctaveByValue(value);
 		octaveService.setOctave(newOctave);
 	}
 </script>
@@ -55,8 +57,8 @@
 			on:change={handleKeyChange}
 			class="rounded-md border border-[#3A3A3D] bg-[#2A2A2D] px-3 py-2 text-[#F3F0F0] focus:border-[#F3F0F0] focus:outline-none"
 		>
-			{#each keyService.availableKeys as key}
-				<option value={key}>{key}</option>
+			{#each NoteNameHelper.asToneList as note}
+				<option value={note.name}>{note.name}</option>
 			{/each}
 		</select>
 	</div>
@@ -69,8 +71,8 @@
 			on:change={handleOctaveChange}
 			class="rounded-md border border-[#3A3A3D] bg-[#2A2A2D] px-3 py-2 text-[#F3F0F0] focus:border-[#F3F0F0] focus:outline-none"
 		>
-			{#each octaveService.availableOctaves as octave}
-				<option value={octave}>{octave}</option>
+			{#each OctaveHelper.asList as octave}
+				<option value={octave.value}>{octave.name}</option>
 			{/each}
 		</select>
 	</div>

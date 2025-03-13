@@ -56,18 +56,18 @@ export class DegreeHelper {
 	};
 
 	public static readonly asCOFList = [
-		DegreeHelper.NOTE_DEGREES.one,
-		DegreeHelper.NOTE_DEGREES.five,
-		DegreeHelper.NOTE_DEGREES.two,
-		DegreeHelper.NOTE_DEGREES.six,
-		DegreeHelper.NOTE_DEGREES.three,
-		DegreeHelper.NOTE_DEGREES.seven,
-		DegreeHelper.NOTE_DEGREES.sharpFour,
-		DegreeHelper.NOTE_DEGREES.flatTwo,
-		DegreeHelper.NOTE_DEGREES.flatSix,
-		DegreeHelper.NOTE_DEGREES.flatThree,
-		DegreeHelper.NOTE_DEGREES.flatSeven,
-		DegreeHelper.NOTE_DEGREES.four
+		this.NOTE_DEGREES.one,
+		this.NOTE_DEGREES.five,
+		this.NOTE_DEGREES.two,
+		this.NOTE_DEGREES.six,
+		this.NOTE_DEGREES.three,
+		this.NOTE_DEGREES.seven,
+		this.NOTE_DEGREES.sharpFour,
+		this.NOTE_DEGREES.flatTwo,
+		this.NOTE_DEGREES.flatSix,
+		this.NOTE_DEGREES.flatThree,
+		this.NOTE_DEGREES.flatSeven,
+		this.NOTE_DEGREES.four
 	];
 
 	public static getDegreeIndexCOF(degree: NoteDegree) {

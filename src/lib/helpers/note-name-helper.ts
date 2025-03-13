@@ -1,4 +1,4 @@
-import { Octave, SynthPreset } from '$lib';
+import { type Octave, type SynthPreset } from '$lib';
 
 export interface NoteName {
 	name: string;
@@ -6,10 +6,10 @@ export interface NoteName {
 	distanceFromG: number;
 }
 
-const _cofMemory: { [key: string]: NoteName[] } = {};
-const _toneMemory: { [key: string]: NoteName[] } = {};
-
 export class NoteNameHelper {
+	private static cofMemory: { [key: string]: NoteName[] } = {};
+	private static toneMemory: { [key: string]: NoteName[] } = {};
+
 	public static readonly NOTE_NAMES: { [key: string]: NoteName } = {
 		c: {
 			name: 'C',
@@ -56,10 +56,20 @@ export class NoteNameHelper {
 			distance: 8,
 			distanceFromG: 1
 		},
+		a: {
+			name: 'A',
+			distance: 9,
+			distanceFromG: 2
+		},
 		aSharpBb: {
 			name: 'A#/Bb',
 			distance: 10,
 			distanceFromG: 3
+		},
+		b: {
+			name: 'B',
+			distance: 11,
+			distanceFromG: 4
 		}
 	};
 
@@ -107,9 +117,13 @@ export class NoteNameHelper {
 		this.NOTE_NAMES.fSharpGb
 	];
 
+	public static getNoteNameByName(name: string): NoteName {
+		return this.asToneList.find((note) => note.name === name)!;
+	}
+
 	public static getTonicRootedCOFList(tonic: NoteName): NoteName[] {
-		if (_cofMemory[tonic.name]) {
-			return _cofMemory[tonic.name];
+		if (this.cofMemory[tonic.name]) {
+			return this.cofMemory[tonic.name];
 		}
 
 		const tonicIndex = this.asCOFList.indexOf(tonic);
@@ -117,13 +131,13 @@ export class NoteNameHelper {
 		const start = this.asCOFList.slice(tonicIndex);
 		const result = [...start, ...end];
 
-		_cofMemory[tonic.name] = result;
+		this.cofMemory[tonic.name] = result;
 		return result;
 	}
 
 	public static getTonicRootedToneList(tonic: NoteName): NoteName[] {
-		if (_toneMemory[tonic.name]) {
-			return _toneMemory[tonic.name];
+		if (this.toneMemory[tonic.name]) {
+			return this.toneMemory[tonic.name];
 		}
 
 		const tonicIndex = this.asToneList.indexOf(tonic);
@@ -131,7 +145,7 @@ export class NoteNameHelper {
 		const start = this.asToneList.slice(tonicIndex);
 		const result = [...start, ...end];
 
-		_toneMemory[tonic.name] = result;
+		this.toneMemory[tonic.name] = result;
 		return result;
 	}
 

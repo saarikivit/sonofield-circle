@@ -1,24 +1,9 @@
-export type MusicalKey = 'C' | 'C#' | 'D' | 'D#' | 'E' | 'F' | 'F#' | 'G' | 'G#' | 'A' | 'A#' | 'B';
+import { NoteNameHelper, type NoteName } from '$lib';
 
 export class CurrentKeyService {
 	private static instance: CurrentKeyService;
 
-	public readonly availableKeys: MusicalKey[] = [
-		'C',
-		'C#',
-		'D',
-		'D#',
-		'E',
-		'F',
-		'F#',
-		'G',
-		'G#',
-		'A',
-		'A#',
-		'B'
-	];
-
-	#currentKey = $state<MusicalKey>('C');
+	#currentKey = $state<NoteName>(NoteNameHelper.NOTE_NAMES.c);
 
 	private constructor() {}
 
@@ -29,18 +14,18 @@ export class CurrentKeyService {
 		return CurrentKeyService.instance;
 	}
 
-	public get currentKey(): MusicalKey {
+	public get currentKey(): NoteName {
 		return this.#currentKey;
 	}
 
-	public setKey(key: MusicalKey): void {
-		if (this.availableKeys.includes(key)) {
+	public setKey(key: NoteName): void {
+		if (NoteNameHelper.asToneList.includes(key)) {
 			this.#currentKey = key;
 		}
 	}
 
 	public setRandomKey(): void {
-		const randomIndex = Math.floor(Math.random() * this.availableKeys.length);
-		this.#currentKey = this.availableKeys[randomIndex];
+		const randomIndex = Math.floor(Math.random() * 12);
+		this.#currentKey = NoteNameHelper.asToneList[randomIndex];
 	}
 }

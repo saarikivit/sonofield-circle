@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { DegreeHelper, NoteNameHelper, OCTAVES, SynthService, type AppRiveEvent } from '$lib';
+	import {
+		DegreeHelper,
+		NoteNameHelper,
+		OctaveHelper,
+		SynthService,
+		type AppRiveEvent
+	} from '$lib';
 	import * as rive from '@rive-app/canvas';
 
 	let size = 600; // Default size in pixels
@@ -90,7 +96,7 @@
 			const key = NoteNameHelper.keyRelativeToIndexAndTonicGRoot({
 				index,
 				tonic: NoteNameHelper.NOTE_NAMES.c,
-				octave: OCTAVES.four
+				octave: OctaveHelper.OCTAVES.four
 			});
 			synthService.stopMelody(key);
 			return handleDegreeUI(index, false);
@@ -100,7 +106,7 @@
 			const key = NoteNameHelper.keyRelativeToIndexAndTonicGRoot({
 				index,
 				tonic: NoteNameHelper.NOTE_NAMES.c,
-				octave: OCTAVES.four
+				octave: OctaveHelper.OCTAVES.four
 			});
 			synthService.playMelody(key);
 			return handleDegreeUI(index, true);
@@ -120,11 +126,5 @@
 </script>
 
 <div class="flex w-full items-center justify-center">
-	{#if synthService.isInitialized}
-		<p>Initialized</p>
-	{:else}
-		<p>Not initialized</p>
-	{/if}
-	<canvas id="circle" class="rounded-full bg-[#2A2A2D]" style="width: {size}px; height: {size}px;"
-	></canvas>
+	<canvas id="circle" style="width: {size}px; height: {size}px;"></canvas>
 </div>
