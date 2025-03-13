@@ -18,9 +18,13 @@ export class SynthService {
 	private sampler?: Soundfont2Sampler;
 
 	#isInitialized = $state(false);
-
 	public get isInitialized() {
 		return this.#isInitialized;
+	}
+
+	#droneKey = $state<number | null>(null);
+	public get isPlaying() {
+		return this.#droneKey !== null;
 	}
 
 	public async initialize() {
@@ -45,15 +49,19 @@ export class SynthService {
 	}
 
 	public playDrone(midi: number) {
+		if (this.#droneKey !== null) return;
 		this.playMidi('Drones', midi);
+		this.#droneKey = midi;
 	}
 
 	public playMelody(midi: number) {
 		this.playMidi('Melody', midi);
 	}
 
-	public stopDrone(midi: number) {
-		this.stopMidi('Drones', midi);
+	public stopDrone() {
+		if (this.#droneKey === null) return;
+		this.stopMidi('Drones', this.#droneKey);
+		this.#droneKey = null;
 	}
 
 	public stopMelody(midi: number) {

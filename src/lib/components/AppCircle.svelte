@@ -1,8 +1,10 @@
 <script lang="ts">
 	import {
+		CurrentKeyService,
 		DegreeHelper,
 		NoteNameHelper,
 		OctaveHelper,
+		PresetHelper,
 		SynthService,
 		type AppRiveEvent
 	} from '$lib';
@@ -11,6 +13,7 @@
 	let size = 600; // Default size in pixels
 
 	const synthService = SynthService.getInstance();
+	const tonicService = CurrentKeyService.getInstance();
 
 	$effect(() => {
 		synthService.initialize();
@@ -123,8 +126,39 @@
 			r.cleanup();
 		};
 	});
+
+	function handlePlayPause() {
+		if (synthService.isPlaying) {
+			handlePause();
+		} else {
+			handlePlay();
+		}
+	}
+
+	function handlePlay() {
+		const key = NoteNameHelper.keyTonicFromOctave({
+			preset: PresetHelper.SYNTH_PRESETS.drone,
+			tonic: tonicService.currentKey,
+			octave: OctaveHelper.OCTAVES.four
+		});
+		synthService.playDrone(key);
+	}
+
+	function handlePause() {
+		synthService.stopDrone();
+	}
 </script>
 
-<div class="flex w-full items-center justify-center">
+<div class="relative flex w-full items-center justify-center">
 	<canvas id="circle" style="width: {size}px; height: {size}px;"></canvas>
+	<button
+		onclick={handlePlayPause}
+		class="absolute flex h-32 w-32 items-center justify-center opacity-50"
+	>
+		{#if synthService.isPlaying}
+			<img src="/icons/pause.svg" alt="Pause" class="h-32 w-32" />
+		{:else}
+			<img src="/icons/play.svg" alt="Play" class="h-32 w-32" />
+		{/if}
+	</button>
 </div>

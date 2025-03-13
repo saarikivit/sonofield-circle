@@ -193,7 +193,7 @@ export class NoteNameHelper {
 		octave: Octave;
 		preset: SynthPreset;
 	}): number {
-		const tonicIndex = this.asToneList.indexOf(tonic);
+		const tonicIndex = this.asToneList.findIndex((note) => note.name === tonic.name);
 		return preset.rootIndex + octave.tuning + tonicIndex;
 	}
 }
