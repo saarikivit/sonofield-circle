@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CurrentKeyService, CurrentOctaveService, type MusicalKey } from '$lib/services';
+	import { CurrentKeyService, CurrentOctaveService, type MusicalKey } from '$lib';
 
 	let midiDevices: string[] = [];
 	let selectedDevice: string = '';

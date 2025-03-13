@@ -1,6 +1,6 @@
 <!-- Header and body structure -->
 <script>
-	import { AppCircle, ControlPanel } from '$lib/components';
+	import { AppCircle, ControlPanel } from '$lib';
 </script>
 
 <header class="w-full bg-[#1A1A1D] p-4">
