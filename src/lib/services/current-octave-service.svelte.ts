@@ -1,9 +1,9 @@
-import { OctaveHelper, type Octave } from '$lib';
+import { Octave } from '$lib/types/octave';
 
 export class CurrentOctaveService {
 	private static instance: CurrentOctaveService;
 
-	#currentOctave = $state<Octave>(OctaveHelper.OCTAVES.four);
+	#currentOctave = $state<Octave>(Octave.four);
 
 	private constructor() {}
 
@@ -19,7 +19,7 @@ export class CurrentOctaveService {
 	}
 
 	public setOctave(octave: Octave): void {
-		if (OctaveHelper.asList.includes(octave)) {
+		if (Octave.asList.includes(octave)) {
 			this.#currentOctave = octave;
 		}
 	}

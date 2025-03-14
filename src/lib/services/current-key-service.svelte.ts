@@ -1,9 +1,9 @@
-import { NoteNameHelper, type NoteName } from '$lib';
+import { NoteName } from '$lib/types/note-name';
 
 export class CurrentKeyService {
 	private static instance: CurrentKeyService;
 
-	#currentKey = $state<NoteName>(NoteNameHelper.NOTE_NAMES.c);
+	#currentKey = $state<NoteName>(NoteName.c);
 
 	private constructor() {}
 
@@ -15,17 +15,17 @@ export class CurrentKeyService {
 	}
 
 	public get currentKey(): NoteName {
-		return this.#currentKey;
+		return $state.snapshot(this.#currentKey);
 	}
 
 	public setKey(key: NoteName): void {
-		if (NoteNameHelper.asToneList.includes(key)) {
+		if (NoteName.asToneList.includes(key)) {
 			this.#currentKey = key;
 		}
 	}
 
 	public setRandomKey(): void {
 		const randomIndex = Math.floor(Math.random() * 12);
-		this.#currentKey = NoteNameHelper.asToneList[randomIndex];
+		this.#currentKey = NoteName.asToneList[randomIndex];
 	}
 }

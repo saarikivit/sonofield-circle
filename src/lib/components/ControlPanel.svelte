@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { CurrentKeyService, CurrentOctaveService, NoteNameHelper, OctaveHelper } from '$lib';
+	import { NoteName } from '$lib/types/note-name';
+	import { Octave } from '$lib/types/octave';
 
 	let midiDevices: string[] = [];
 	let selectedDevice: string = '';
@@ -57,7 +59,7 @@
 			on:change={handleKeyChange}
 			class="rounded-md border border-[#3A3A3D] bg-[#2A2A2D] px-3 py-2 text-[#F3F0F0] focus:border-[#F3F0F0] focus:outline-none"
 		>
-			{#each NoteNameHelper.asToneList as note}
+			{#each NoteName.asToneList as note}
 				<option value={note.name}>{note.name}</option>
 			{/each}
 		</select>
@@ -71,7 +73,7 @@
 			on:change={handleOctaveChange}
 			class="rounded-md border border-[#3A3A3D] bg-[#2A2A2D] px-3 py-2 text-[#F3F0F0] focus:border-[#F3F0F0] focus:outline-none"
 		>
-			{#each OctaveHelper.asList as octave}
+			{#each Octave.asList as octave}
 				<option value={octave.value}>{octave.name}</option>
 			{/each}
 		</select>

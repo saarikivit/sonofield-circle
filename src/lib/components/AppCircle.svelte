@@ -3,11 +3,12 @@
 		CurrentKeyService,
 		DegreeHelper,
 		NoteNameHelper,
-		OctaveHelper,
-		PresetHelper,
 		SynthService,
 		type AppRiveEvent
 	} from '$lib';
+	import { NoteDegree } from '$lib/types/note-degree';
+	import { Octave } from '$lib/types/octave';
+	import { SynthPreset } from '$lib/types/synth-preset';
 	import * as rive from '@rive-app/canvas';
 
 	let size = 600; // Default size in pixels
@@ -27,7 +28,7 @@
 			onLoad: () => {
 				// TODO canvas sizing controls
 				r.resizeDrawingSurfaceToCanvas();
-				DegreeHelper.asCOFList.forEach((degree) => {
+				NoteDegree.asCOFList.forEach((degree) => {
 					// TODO only the current mode
 					r.setBooleanStateAtPath('isActive', true, `Nip ${degree.name}`);
 					r.setBooleanStateAtPath('isHighlighted', true, `Nip ${degree.name}`);
@@ -98,8 +99,8 @@
 		function handleDegreeUp(index: number) {
 			const key = NoteNameHelper.keyRelativeToIndexAndTonicGRoot({
 				index,
-				tonic: NoteNameHelper.NOTE_NAMES.c,
-				octave: OctaveHelper.OCTAVES.four
+				tonic: tonicService.currentKey,
+				octave: Octave.four
 			});
 			synthService.stopMelody(key);
 			return handleDegreeUI(index, false);
@@ -108,8 +109,8 @@
 		function handleDegreeDown(index: number) {
 			const key = NoteNameHelper.keyRelativeToIndexAndTonicGRoot({
 				index,
-				tonic: NoteNameHelper.NOTE_NAMES.c,
-				octave: OctaveHelper.OCTAVES.four
+				tonic: tonicService.currentKey,
+				octave: Octave.four
 			});
 			synthService.playMelody(key);
 			return handleDegreeUI(index, true);
@@ -137,9 +138,9 @@
 
 	function handlePlay() {
 		const key = NoteNameHelper.keyTonicFromOctave({
-			preset: PresetHelper.SYNTH_PRESETS.drone,
+			preset: SynthPreset.drone,
 			tonic: tonicService.currentKey,
-			octave: OctaveHelper.OCTAVES.four
+			octave: Octave.four
 		});
 		synthService.playDrone(key);
 	}
