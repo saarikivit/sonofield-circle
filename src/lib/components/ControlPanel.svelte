@@ -1,13 +1,33 @@
 <script lang="ts">
-	import { CurrentKeyService, CurrentOctaveService, NoteNameHelper, OctaveHelper } from '$lib';
+	import {
+		CurrentKeyService,
+		CurrentOctaveService,
+		MidiService,
+		NoteNameHelper,
+		OctaveHelper,
+		SynthService
+	} from '$lib';
 	import { NoteName } from '$lib/types/note-name';
 	import { Octave } from '$lib/types/octave';
 
 	let midiDevices: string[] = [];
-	let selectedDevice: string = '';
+	let selectedDevice: string = $state('');
 
 	const keyService = CurrentKeyService.getInstance();
 	const octaveService = CurrentOctaveService.getInstance();
+	const midiService = MidiService.getInstance();
+	const synthService = SynthService.getInstance();
+
+	$effect(() => {
+		midiService.requestAccess(
+			(key) => {
+				synthService.playMelody(key);
+			},
+			(key) => {
+				synthService.stopMelody(key);
+			}
+		);
+	});
 
 	function handleKeyChange(event: Event) {
 		const select = event.target as HTMLSelectElement;
@@ -47,7 +67,7 @@
 		<div class="flex items-center gap-2">
 			<label for="musical-key" class="text-sm text-[#F3F0F0]">Key</label>
 			<button
-				on:click={handleRandomKey}
+				onclick={handleRandomKey}
 				class="rounded bg-[#2A2A2D] px-2 py-1 text-sm text-[#F3F0F0] transition-colors hover:bg-[#3A3A3D]"
 			>
 				Random
@@ -56,7 +76,7 @@
 		<select
 			id="musical-key"
 			value={keyService.currentKey}
-			on:change={handleKeyChange}
+			onchange={handleKeyChange}
 			class="rounded-md border border-[#3A3A3D] bg-[#2A2A2D] px-3 py-2 text-[#F3F0F0] focus:border-[#F3F0F0] focus:outline-none"
 		>
 			{#each NoteName.asToneList as note}
@@ -70,7 +90,7 @@
 		<select
 			id="octave"
 			value={octaveService.currentOctave}
-			on:change={handleOctaveChange}
+			onchange={handleOctaveChange}
 			class="rounded-md border border-[#3A3A3D] bg-[#2A2A2D] px-3 py-2 text-[#F3F0F0] focus:border-[#F3F0F0] focus:outline-none"
 		>
 			{#each Octave.asList as octave}

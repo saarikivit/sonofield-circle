@@ -15,7 +15,7 @@ export class CurrentKeyService {
 	}
 
 	public get currentKey(): NoteName {
-		return $state.snapshot(this.#currentKey);
+		return this.#currentKey;
 	}
 
 	public setKey(key: NoteName): void {
