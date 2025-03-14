@@ -23,10 +23,10 @@ export class MidiService {
 	public requestAccess(onKeyDown: (key: number) => void, onKeyUp: (key: number) => void) {
 		if (navigator.requestMIDIAccess) {
 			navigator
-				.requestMIDIAccess(/* {
+				.requestMIDIAccess({
 					sysex: true,
 					software: true
-				} */)
+				})
 				.then(
 					(access) => {
 						console.log(access);
