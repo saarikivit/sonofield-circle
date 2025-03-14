@@ -24,6 +24,7 @@ export class MidiService {
 		if (navigator.requestMIDIAccess) {
 			navigator
 				.requestMIDIAccess(/* {
+					test
 					sysex: true,
 					software: true
 				} */)
