@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import {
 		CurrentKeyService,
 		CurrentOctaveService,
@@ -15,12 +16,17 @@
 
 	let midiDevices: string[] = [];
 	let selectedDevice: string = $state('');
+	let isHidden = $state(false);
 
 	const keyService = CurrentKeyService.getInstance();
 	const octaveService = CurrentOctaveService.getInstance();
 	const midiService = MidiService.getInstance();
 	const presetService = CurrentPresetService.getInstance();
 	const synthService = SynthService.getInstance(presetService);
+
+	$effect(() => {
+		isHidden = $page.url.searchParams.get('hidden') === 'true';
+	});
 
 	$effect(() => {
 		midiService.requestAccess(
@@ -58,7 +64,7 @@
 	}
 </script>
 
-<div class="flex items-center gap-4">
+<div class="flex items-center gap-4" class:invisible={isHidden}>
 	<!-- <div class="flex flex-col gap-1">
 		<label for="midi-device" class="text-sm text-[#F3F0F0]">MIDI Device</label>
 		<select
