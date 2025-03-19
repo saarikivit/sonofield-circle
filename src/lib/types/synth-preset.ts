@@ -7,6 +7,30 @@ export interface SynthConfig {
 	config: Partial<Tone.SynthOptions>;
 }
 
+/* export class SynthFilter {
+	// Create reverb effect
+	public static readonly reverb = new Tone.Reverb({
+		decay: 5,
+		preDelay: 0.01,
+		wet: 0.3
+	}); // .toDestination();
+
+	// Create separate filters for poly and mono synths
+	public static readonly polyFilter = new Tone.Filter({
+		type: 'lowpass',
+		frequency: 2000,
+		Q: 1,
+		rolloff: -24
+	}).connect(this.reverb);
+
+	public static readonly monoFilter = new Tone.Filter({
+		type: 'lowpass',
+		frequency: 2000,
+		Q: 1,
+		rolloff: -24
+	}).connect(this.reverb);
+} */
+
 export class SynthPreset {
 	public static readonly drone: SynthConfig = {
 		id: 'drone',

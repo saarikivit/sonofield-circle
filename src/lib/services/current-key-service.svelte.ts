@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import { NoteName } from '$lib/types/note-name';
 
 export class CurrentKeyService {
@@ -34,6 +35,7 @@ export class CurrentKeyService {
 	}
 
 	private getStoredKey(): NoteName {
+		if (!browser) return NoteName.c;
 		try {
 			const stored = localStorage.getItem(CurrentKeyService.STORAGE_KEY);
 			if (stored) {
@@ -49,6 +51,7 @@ export class CurrentKeyService {
 	}
 
 	private saveKeyToStorage(key: NoteName): void {
+		if (!browser) return;
 		try {
 			localStorage.setItem(CurrentKeyService.STORAGE_KEY, key.id);
 		} catch (error) {

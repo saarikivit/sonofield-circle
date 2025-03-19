@@ -29,7 +29,9 @@ export class SynthService {
 
 	public async initialize() {
 		await Tone.start();
-		this.droneSynth = new Tone.PolySynth(Tone.Synth, SynthPreset.drone.config).toDestination();
+		this.droneSynth = new Tone.PolySynth(Tone.Synth, SynthPreset.drone.config)
+			// .connect(SynthFilter.reverb.toDestination())
+			.toDestination();
 		this.setMelodySynth(this.currentPresetService.currentPreset.id);
 		this.#isInitialized = true;
 	}
@@ -44,9 +46,15 @@ export class SynthService {
 
 		// Create new synth with the selected preset
 		if (preset.type === 'poly') {
-			this.melodySynth = new Tone.PolySynth(Tone.Synth, preset.config).toDestination();
+			this.melodySynth = new Tone.PolySynth(Tone.Synth, preset.config)
+				.disconnect()
+				// .connect(SynthFilter.polyFilter)
+				.toDestination();
 		} else {
-			this.melodySynth = new Tone.MonoSynth(preset.config).toDestination();
+			this.melodySynth = new Tone.MonoSynth(preset.config)
+				.disconnect()
+				// .connect(SynthFilter.monoFilter)
+				.toDestination();
 		}
 	}
 
