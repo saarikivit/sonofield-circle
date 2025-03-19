@@ -21,8 +21,10 @@ export class SynthService {
 		return this.#isInitialized;
 	}
 
-	#droneKey = $state<string | null>(null);
-	public readonly isPlaying = $derived(this.#droneKey !== null);
+	#isPlaying = $state<boolean>(false);
+	public get isPlaying() {
+		return this.#isPlaying;
+	}
 
 	#currentPreset = $state('default');
 	public get currentPreset() {
@@ -74,10 +76,11 @@ export class SynthService {
 	}
 
 	public playDrone(midi: number) {
-		if (this.#droneKey !== null) return;
+		if (this.#isPlaying) return;
+		this.#isPlaying = true;
+
 		const note = this.midiToNote(midi);
 		this.droneSynth?.triggerAttack(note);
-		this.#droneKey = note;
 	}
 
 	public playMelody(midi: number) {
@@ -86,9 +89,10 @@ export class SynthService {
 	}
 
 	public stopDrone() {
-		if (this.#droneKey === null) return;
-		this.droneSynth?.triggerRelease(this.#droneKey);
-		this.#droneKey = null;
+		if (!this.#isPlaying) return;
+		this.#isPlaying = false;
+
+		this.droneSynth?.releaseAll();
 	}
 
 	public stopMelody(midi: number) {
@@ -97,7 +101,8 @@ export class SynthService {
 	}
 
 	public stopAll() {
-		this.droneSynth?.releaseAll();
+		this.stopDrone();
+
 		if (this.melodySynth instanceof Tone.PolySynth) {
 			this.melodySynth.releaseAll();
 		} else if (this.melodySynth instanceof Tone.MonoSynth) {
