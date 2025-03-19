@@ -75,7 +75,7 @@
 		</div>
 		<select
 			id="musical-key"
-			value={keyService.currentKey}
+			value={keyService.currentKey.name}
 			onchange={handleKeyChange}
 			class="rounded-md border border-[#3A3A3D] bg-[#2A2A2D] px-3 py-2 text-[#F3F0F0] focus:border-[#F3F0F0] focus:outline-none"
 		>
@@ -89,7 +89,7 @@
 		<label for="octave" class="text-sm text-[#F3F0F0]">Octave</label>
 		<select
 			id="octave"
-			value={octaveService.currentOctave}
+			value={octaveService.currentOctave.value}
 			onchange={handleOctaveChange}
 			class="rounded-md border border-[#3A3A3D] bg-[#2A2A2D] px-3 py-2 text-[#F3F0F0] focus:border-[#F3F0F0] focus:outline-none"
 		>
