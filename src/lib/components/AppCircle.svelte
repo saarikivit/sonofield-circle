@@ -17,8 +17,6 @@
 	const tonicService = CurrentKeyService.getInstance();
 
 	$effect(() => {
-		synthService.initialize();
-
 		const r = new rive.Rive({
 			canvas: document.getElementById('circle') as HTMLCanvasElement,
 			src: '/rive/circle.riv',
@@ -133,6 +131,7 @@
 			handlePause();
 		} else {
 			handlePlay();
+			synthService.initialize();
 		}
 	}
 
