@@ -72,8 +72,8 @@ export class SynthService {
 
 	private get melodyFilter() {
 		const filter = new Tone.Filter(SynthFilter.melodyFilter.config);
-		filter.connect(this.masterReverb as Tone.Freeverb);
-		filter.connect(this.masterChorus as Tone.Chorus);
+		filter.connect(this.masterReverb!);
+		filter.connect(this.masterChorus!);
 		return filter;
 	}
 
@@ -110,13 +110,16 @@ export class SynthService {
 			this.melodySynth = new Tone.PolySynth(Tone.Synth, {
 				...preset.config,
 				volume: -6 // Add volume control
-			}).connect(this.melodyFilter);
+			});
 		} else {
 			this.melodySynth = new Tone.MonoSynth({
 				...preset.config,
 				volume: -6 // Add volume control
-			}).connect(this.melodyFilter);
+			});
 		}
+
+		// Connect through filter then to effects for parallel processing
+		this.melodySynth.connect(this.melodyFilter);
 	}
 
 	private midiToNote(midi: number): string {
