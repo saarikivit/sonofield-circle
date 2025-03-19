@@ -93,7 +93,11 @@ export class SynthService {
 
 	public stopMelody(midi: number) {
 		const note = this.midiToNote(midi);
-		this.melodySynth?.triggerRelease(note);
+		if (this.melodySynth instanceof Tone.PolySynth) {
+			this.melodySynth?.triggerRelease(note);
+		} else if (this.melodySynth instanceof Tone.MonoSynth) {
+			this.melodySynth.triggerRelease();
+		}
 	}
 
 	public stopAll() {

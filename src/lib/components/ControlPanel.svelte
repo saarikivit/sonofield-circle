@@ -11,6 +11,7 @@
 
 	import { NoteName } from '$lib/types/note-name';
 	import { Octave } from '$lib/types/octave';
+	import { SynthPreset } from '$lib/types/synth-preset';
 
 	let midiDevices: string[] = [];
 	let selectedDevice: string = $state('');
@@ -48,6 +49,12 @@
 		const value = parseInt(select.value);
 		const newOctave = OctaveHelper.getOctaveByValue(value);
 		octaveService.setOctave(newOctave);
+	}
+
+	function handlePresetChange(event: Event) {
+		const select = event.target as HTMLSelectElement;
+		const value = select.value;
+		presetService.setPreset(value);
 	}
 </script>
 
@@ -98,6 +105,20 @@
 		>
 			{#each Octave.asList as octave}
 				<option value={octave.value}>{octave.name}</option>
+			{/each}
+		</select>
+	</div>
+
+	<div class="flex flex-col gap-1">
+		<label for="preset" class="text-sm text-[#F3F0F0]">Synth Preset</label>
+		<select
+			id="preset"
+			value={presetService.currentPreset.id}
+			onchange={handlePresetChange}
+			class="rounded-md border border-[#3A3A3D] bg-[#2A2A2D] px-3 py-2 text-[#F3F0F0] focus:border-[#F3F0F0] focus:outline-none"
+		>
+			{#each SynthPreset.asList as preset}
+				<option value={preset.id}>{preset.name}</option>
 			{/each}
 		</select>
 	</div>
