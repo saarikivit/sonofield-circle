@@ -82,10 +82,10 @@ export class SynthPreset {
 				onstop: () => {}
 			},
 			envelope: {
-				attack: 0.1,
+				attack: 0.01,
 				decay: 0.1,
-				sustain: 0.8,
-				release: 0.8,
+				sustain: 0.5,
+				release: 0.1,
 				attackCurve: 'linear',
 				decayCurve: 'exponential',
 				releaseCurve: 'exponential'
