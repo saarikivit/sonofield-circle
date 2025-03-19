@@ -16,7 +16,8 @@ export class SynthService {
 
 	private masterChannel?: Tone.Channel;
 	private masterCompressor?: Tone.Compressor;
-	private inputChannel?: Tone.Channel;
+	private melodyInputChannel?: Tone.Channel;
+	private droneInputChannel?: Tone.Channel;
 
 	private initializeMasterChannel() {
 		// Create master compressor to prevent clipping
@@ -35,12 +36,16 @@ export class SynthService {
 		}).toDestination();
 		this.masterChannel = channel;
 
-		this.inputChannel = new Tone.Channel();
+		this.melodyInputChannel = new Tone.Channel();
+		this.droneInputChannel = new Tone.Channel();
+
 		const reverb = this.reverb;
 		const chorus = this.chorus;
 
 		// Connect effects chain: effects -> compressor -> master channel -> destination
-		this.inputChannel.chain(reverb, chorus, compressor, channel);
+		this.melodyInputChannel.chain(reverb, chorus, compressor, channel);
+		// Connect drone synth to compressor and master channel
+		this.droneInputChannel.chain(compressor, channel);
 	}
 
 	private droneSynth?: Tone.PolySynth;
@@ -81,7 +86,7 @@ export class SynthService {
 			...SynthPreset.drone.config,
 			volume: -12 // Reduce drone volume
 		});
-		this.droneSynth.connect(this.inputChannel!);
+		this.droneSynth.connect(this.droneInputChannel!);
 	}
 
 	public setMelodySynth(presetId: string) {
@@ -106,7 +111,7 @@ export class SynthService {
 		}
 
 		// Connect through filter then to effects for parallel processing
-		this.melodySynth.connect(this.inputChannel!);
+		this.melodySynth.connect(this.melodyInputChannel!);
 	}
 
 	private midiToNote(midi: number): string {
