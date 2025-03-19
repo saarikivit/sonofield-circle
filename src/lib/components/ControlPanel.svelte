@@ -49,7 +49,7 @@
 </script>
 
 <div class="flex items-center gap-4">
-	<div class="flex flex-col gap-1">
+	<!-- <div class="flex flex-col gap-1">
 		<label for="midi-device" class="text-sm text-[#F3F0F0]">MIDI Device</label>
 		<select
 			id="midi-device"
@@ -61,7 +61,7 @@
 				<option value={device}>{device}</option>
 			{/each}
 		</select>
-	</div>
+	</div> -->
 
 	<div class="flex flex-col gap-1">
 		<div class="flex items-center gap-2">

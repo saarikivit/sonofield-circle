@@ -8,16 +8,16 @@
 	} from '$lib';
 	import { NoteDegree } from '$lib/types/note-degree';
 	import { Octave } from '$lib/types/octave';
-	import { SynthPreset } from '$lib/types/synth-preset';
 	import * as rive from '@rive-app/canvas';
 
 	let size = 600; // Default size in pixels
 
 	const synthService = SynthService.getInstance();
 	const tonicService = CurrentKeyService.getInstance();
+	let r: rive.Rive | null = null;
 
 	$effect(() => {
-		const r = new rive.Rive({
+		r = new rive.Rive({
 			canvas: document.getElementById('circle') as HTMLCanvasElement,
 			src: '/rive/circle.riv',
 			autoplay: true,
@@ -25,16 +25,15 @@
 			stateMachines: 'Sonofield',
 			onLoad: () => {
 				// TODO canvas sizing controls
-				r.resizeDrawingSurfaceToCanvas();
+				r!.resizeDrawingSurfaceToCanvas();
 				NoteDegree.asCOFList.forEach((degree) => {
 					// TODO only the current mode
-					r.setBooleanStateAtPath('isActive', true, `Nip ${degree.name}`);
-					r.setBooleanStateAtPath('isHighlighted', true, `Nip ${degree.name}`);
+					r!.setBooleanStateAtPath('isHighlighted', true, `Nip ${degree.name}`);
 				});
 			}
 		});
 
-		r.on(rive.EventType.RiveEvent, (event) => {
+		r!.on(rive.EventType.RiveEvent, (event) => {
 			const data = event.data as rive.RiveEventPayload;
 			if (data.name) {
 				handleRiveEvent(data.name as AppRiveEvent);
@@ -95,6 +94,8 @@
 		}
 
 		function handleDegreeUp(index: number) {
+			if (!synthService.isPlaying) return;
+
 			const key = NoteNameHelper.keyRelativeToIndexAndTonicGRoot({
 				index,
 				tonic: tonicService.currentKey,
@@ -105,6 +106,8 @@
 		}
 
 		function handleDegreeDown(index: number) {
+			if (!synthService.isPlaying) return;
+
 			const key = NoteNameHelper.keyRelativeToIndexAndTonicGRoot({
 				index,
 				tonic: tonicService.currentKey,
@@ -114,38 +117,44 @@
 			return handleDegreeUI(index, true);
 		}
 
-		function handleDegreeUI(index: number, value: boolean) {
-			const degree = DegreeHelper.getDegreeByIndexCOF(index);
-			r.setBooleanStateAtPath('isActive', value, `Active ${degree.name}`);
-			r.setBooleanStateAtPath('isActive', value, `Num ${degree.name}`);
-		}
-
 		return () => {
-			r.removeAllRiveEventListeners();
-			r.cleanup();
+			r!.removeAllRiveEventListeners();
+			r!.cleanup();
 		};
 	});
 
-	function handlePlayPause() {
+	function handleDegreeUI(index: number, value: boolean) {
+		const degree = DegreeHelper.getDegreeByIndexCOF(index);
+		r!.setBooleanStateAtPath('isActive', value, `Active ${degree.name}`);
+		r!.setBooleanStateAtPath('isActive', value, `Num ${degree.name}`);
+	}
+
+	async function handlePlayPause() {
 		if (synthService.isPlaying) {
 			handlePause();
 		} else {
+			await synthService.initialize();
 			handlePlay();
-			synthService.initialize();
 		}
 	}
 
 	function handlePlay() {
 		const key = NoteNameHelper.keyTonicFromOctave({
-			preset: SynthPreset.drone,
 			tonic: tonicService.currentKey,
-			octave: Octave.four
+			octave: Octave.two
 		});
 		synthService.playDrone(key);
 	}
 
+	function unhighlightAll() {
+		for (let i = 0; i < 12; i++) {
+			handleDegreeUI(i, false);
+		}
+	}
+
 	function handlePause() {
-		synthService.stopDrone();
+		synthService.stopAll();
+		unhighlightAll();
 	}
 </script>
 

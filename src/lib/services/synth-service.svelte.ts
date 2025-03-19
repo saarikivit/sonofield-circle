@@ -1,143 +1,5 @@
+import { SynthPreset } from '$lib/types/synth-preset';
 import * as Tone from 'tone';
-
-interface SynthConfig {
-	name: string;
-	type: 'poly' | 'mono';
-	config: Partial<Tone.SynthOptions>;
-}
-
-const SYNTH_PRESETS: Record<string, SynthConfig> = {
-	default: {
-		name: 'Default',
-		type: 'poly',
-		config: {
-			oscillator: {
-				type: 'triangle',
-				phase: 0,
-				volume: 0,
-				mute: false,
-				onstop: () => {}
-			},
-			envelope: {
-				attack: 0.1,
-				decay: 0.1,
-				sustain: 0.8,
-				release: 0.8,
-				attackCurve: 'linear',
-				decayCurve: 'exponential',
-				releaseCurve: 'exponential'
-			},
-			portamento: 0,
-			detune: 0,
-			volume: 0,
-			onsilence: () => {}
-		}
-	},
-	bright: {
-		name: 'Bright',
-		type: 'poly',
-		config: {
-			oscillator: {
-				type: 'square',
-				phase: 0,
-				volume: 0,
-				mute: false,
-				onstop: () => {}
-			},
-			envelope: {
-				attack: 0.05,
-				decay: 0.2,
-				sustain: 0.6,
-				release: 0.4,
-				attackCurve: 'linear',
-				decayCurve: 'exponential',
-				releaseCurve: 'exponential'
-			},
-			portamento: 0,
-			detune: 0,
-			volume: 0,
-			onsilence: () => {}
-		}
-	},
-	soft: {
-		name: 'Soft',
-		type: 'poly',
-		config: {
-			oscillator: {
-				type: 'sine',
-				phase: 0,
-				volume: 0,
-				mute: false,
-				onstop: () => {}
-			},
-			envelope: {
-				attack: 0.3,
-				decay: 0.3,
-				sustain: 0.7,
-				release: 1.2,
-				attackCurve: 'linear',
-				decayCurve: 'exponential',
-				releaseCurve: 'exponential'
-			},
-			portamento: 0,
-			detune: 0,
-			volume: 0,
-			onsilence: () => {}
-		}
-	},
-	pluck: {
-		name: 'Pluck',
-		type: 'poly',
-		config: {
-			oscillator: {
-				type: 'triangle',
-				phase: 0,
-				volume: 0,
-				mute: false,
-				onstop: () => {}
-			},
-			envelope: {
-				attack: 0.02,
-				decay: 0.15,
-				sustain: 0.2,
-				release: 0.3,
-				attackCurve: 'linear',
-				decayCurve: 'exponential',
-				releaseCurve: 'exponential'
-			},
-			portamento: 0,
-			detune: 0,
-			volume: 0,
-			onsilence: () => {}
-		}
-	},
-	lead: {
-		name: 'Lead',
-		type: 'mono',
-		config: {
-			oscillator: {
-				type: 'sawtooth',
-				phase: 0,
-				volume: 0,
-				mute: false,
-				onstop: () => {}
-			},
-			envelope: {
-				attack: 0.05,
-				decay: 0.1,
-				sustain: 0.9,
-				release: 0.4,
-				attackCurve: 'linear',
-				decayCurve: 'exponential',
-				releaseCurve: 'exponential'
-			},
-			portamento: 0.05,
-			detune: 0,
-			volume: 0,
-			onsilence: () => {}
-		}
-	}
-};
 
 export class SynthService {
 	public static instance: SynthService;
@@ -160,25 +22,14 @@ export class SynthService {
 	}
 
 	#droneKey = $state<string | null>(null);
-	public get isPlaying() {
-		return this.#droneKey !== null;
-	}
+	public readonly isPlaying = $derived(this.#droneKey !== null);
 
 	#currentPreset = $state('default');
 	public get currentPreset() {
 		return this.#currentPreset;
 	}
 
-	public get availablePresets() {
-		return Object.entries(SYNTH_PRESETS).map(([id, preset]) => ({
-			id,
-			name: preset.name
-		}));
-	}
-
 	public async initialize() {
-		console.log('initialize');
-
 		await Tone.start();
 
 		// Initialize drone synth with a deep, rich sound
@@ -193,16 +44,17 @@ export class SynthService {
 				release: 3
 			}
 		}).toDestination();
+
 		this.droneSynth.volume.value = -10; // Slightly quieter for background
 
 		// Initialize melody synth with default preset
-		this.updateMelodySynth(this.#currentPreset);
+		this.setMelodySynth(this.#currentPreset);
 
 		this.#isInitialized = true;
 	}
 
-	public updateMelodySynth(presetId: string) {
-		const preset = SYNTH_PRESETS[presetId];
+	public setMelodySynth(presetId: string) {
+		const preset = SynthPreset.asList.find((p) => p.id === presetId);
 		if (!preset) return;
 
 		// If there's an existing synth, dispose of it
@@ -234,7 +86,6 @@ export class SynthService {
 	}
 
 	public stopDrone() {
-		console.log('stopDrone', this.#droneKey);
 		if (this.#droneKey === null) return;
 		this.droneSynth?.triggerRelease(this.#droneKey);
 		this.#droneKey = null;
@@ -243,5 +94,14 @@ export class SynthService {
 	public stopMelody(midi: number) {
 		const note = this.midiToNote(midi);
 		this.melodySynth?.triggerRelease(note);
+	}
+
+	public stopAll() {
+		this.droneSynth?.releaseAll();
+		if (this.melodySynth instanceof Tone.PolySynth) {
+			this.melodySynth.releaseAll();
+		} else if (this.melodySynth instanceof Tone.MonoSynth) {
+			this.melodySynth.triggerRelease();
+		}
 	}
 }

@@ -1,6 +1,5 @@
 import { NoteName } from '$lib/types/note-name';
 import type { Octave } from '$lib/types/octave';
-import type { SynthPreset } from '$lib/types/synth-preset';
 
 export class NoteNameHelper {
 	private static cofMemory: { [key: string]: NoteName[] } = {};
@@ -60,29 +59,19 @@ export class NoteNameHelper {
 	public static keyRelativeToIndexAndTonic({
 		index,
 		tonic,
-		octave,
-		preset
+		octave
 	}: {
 		index: number;
 		tonic: NoteName;
 		octave: Octave;
-		preset: SynthPreset;
 	}): number {
 		const cofList = this.getTonicRootedCOFList(tonic);
 		const note = cofList[index];
-		return preset.rootIndex + octave.tuning + note.distance;
+		return 60 + octave.tuning + note.distance;
 	}
 
-	public static keyTonicFromOctave({
-		tonic,
-		octave,
-		preset
-	}: {
-		tonic: NoteName;
-		octave: Octave;
-		preset: SynthPreset;
-	}): number {
+	public static keyTonicFromOctave({ tonic, octave }: { tonic: NoteName; octave: Octave }): number {
 		const tonicIndex = NoteName.asToneList.findIndex((note) => note.name === tonic.name);
-		return preset.rootIndex + octave.tuning + tonicIndex;
+		return 60 + octave.tuning + tonicIndex;
 	}
 }
