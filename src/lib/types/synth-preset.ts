@@ -91,10 +91,11 @@ export class SynthPreset {
 		type: 'poly',
 		config: {
 			oscillator: {
-				type: 'triangle',
+				type: 'sine',
 				phase: 0,
 				volume: 0,
 				mute: false,
+				partialCount: 1,
 				onstop: () => {}
 			},
 			envelope: {

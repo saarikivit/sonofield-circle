@@ -39,7 +39,7 @@
 	function handlePlay() {
 		const key = NoteNameHelper.keyTonicFromOctave({
 			tonic: tonicService.currentKey,
-			octave: Octave.two
+			octave: Octave.three
 		});
 		synthService.playDrone(key);
 	}
