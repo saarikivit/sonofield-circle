@@ -31,14 +31,20 @@ export class SynthService {
 		return new Tone.Freeverb(SynthEffect.reverb.config).toDestination();
 	}
 
+	private get chorus() {
+		return new Tone.Chorus(SynthEffect.chorus.config).toDestination();
+	}
+
 	private get melodyFilter() {
-		return new Tone.Filter(SynthFilter.melodyFilter.config).connect(this.reverb);
+		return new Tone.Filter(SynthFilter.melodyFilter.config)
+			.connect(this.reverb)
+			.connect(this.chorus);
 	}
 
 	public async initialize() {
 		await Tone.start();
 		this.droneSynth = new Tone.PolySynth(Tone.Synth, SynthPreset.drone.config)
-			.connect(this.reverb.toDestination())
+			.connect(this.reverb)
 			.toDestination();
 		this.setMelodySynth(this.currentPresetService.currentPreset.id);
 		this.#isInitialized = true;

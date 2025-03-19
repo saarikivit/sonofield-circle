@@ -16,7 +16,7 @@ export interface SynthFilterConfig {
 export interface SynthEffectConfig {
 	id: string;
 	name: string;
-	config: Partial<Tone.FreeverbOptions>;
+	config: Partial<Tone.FreeverbOptions | Tone.ChorusOptions>;
 }
 
 export class SynthEffect {
@@ -27,6 +27,22 @@ export class SynthEffect {
 			dampening: 1000,
 			roomSize: 0.5,
 			wet: 0.5
+		}
+	};
+
+	public static readonly chorus: SynthEffectConfig = {
+		id: 'chorus',
+		name: 'Chorus',
+		config: {
+			depth: 0.5,
+			feedback: 0.5,
+			delayTime: 0.1,
+			roomSize: 0.5,
+			wet: 0.5,
+			type: 'sine',
+			spread: 180,
+			dampening: undefined,
+			frequency: undefined
 		}
 	};
 }
