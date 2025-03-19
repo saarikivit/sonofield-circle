@@ -43,7 +43,7 @@ export class SynthService {
 		this.masterReverb = reverb;
 		this.masterChorus = chorus;
 
-		// Connect effects chain with guaranteed non-null values
+		// Connect effects chain: effects -> compressor -> master channel -> destination
 		reverb.connect(compressor);
 		chorus.connect(compressor);
 		compressor.connect(channel);
@@ -72,10 +72,8 @@ export class SynthService {
 
 	private get melodyFilter() {
 		const filter = new Tone.Filter(SynthFilter.melodyFilter.config);
-		if (this.masterReverb && this.masterChorus) {
-			filter.connect(this.masterReverb);
-			filter.connect(this.masterChorus);
-		}
+		filter.connect(this.masterReverb as Tone.Freeverb);
+		filter.connect(this.masterChorus as Tone.Chorus);
 		return filter;
 	}
 
@@ -84,18 +82,19 @@ export class SynthService {
 
 		this.initializeMasterChannel();
 
-		// Connect drone synth to master channel
+		this.setDroneSynth();
+		this.setMelodySynth(this.currentPresetService.currentPreset.id);
+
+		this.#isInitialized = true;
+	}
+
+	private setDroneSynth() {
+		// Connect drone synth through the effects chain
 		this.droneSynth = new Tone.PolySynth(Tone.Synth, {
 			...SynthPreset.drone.config,
 			volume: -12 // Reduce drone volume
 		});
-
-		if (this.masterCompressor) {
-			this.droneSynth.connect(this.masterCompressor);
-		}
-
-		this.setMelodySynth(this.currentPresetService.currentPreset.id);
-		this.#isInitialized = true;
+		this.droneSynth.connect(this.masterReverb!);
 	}
 
 	public setMelodySynth(presetId: string) {
