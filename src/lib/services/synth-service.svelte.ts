@@ -1,4 +1,4 @@
-import { SynthPreset } from '$lib/types/synth-preset';
+import { SynthEffect, SynthFilter, SynthPreset } from '$lib/types/synth-preset';
 import * as Tone from 'tone';
 import type { CurrentPresetService } from './current-preset-service.svelte';
 
@@ -27,10 +27,18 @@ export class SynthService {
 		return this.#isPlaying;
 	}
 
+	private get reverb() {
+		return new Tone.Freeverb(SynthEffect.reverb.config).toDestination();
+	}
+
+	private get melodyFilter() {
+		return new Tone.Filter(SynthFilter.melodyFilter.config).connect(this.reverb);
+	}
+
 	public async initialize() {
 		await Tone.start();
 		this.droneSynth = new Tone.PolySynth(Tone.Synth, SynthPreset.drone.config)
-			// .connect(SynthFilter.reverb.toDestination())
+			.connect(this.reverb.toDestination())
 			.toDestination();
 		this.setMelodySynth(this.currentPresetService.currentPreset.id);
 		this.#isInitialized = true;
@@ -47,13 +55,11 @@ export class SynthService {
 		// Create new synth with the selected preset
 		if (preset.type === 'poly') {
 			this.melodySynth = new Tone.PolySynth(Tone.Synth, preset.config)
-				.disconnect()
-				// .connect(SynthFilter.polyFilter)
+				.connect(this.melodyFilter)
 				.toDestination();
 		} else {
 			this.melodySynth = new Tone.MonoSynth(preset.config)
-				.disconnect()
-				// .connect(SynthFilter.monoFilter)
+				.connect(this.melodyFilter)
 				.toDestination();
 		}
 	}
