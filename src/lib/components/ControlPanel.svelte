@@ -78,9 +78,9 @@
 			<label for="musical-key" class="text-sm text-[#F3F0F0]">Key</label>
 			<button
 				onclick={handleRandomKey}
-				class="rounded bg-[#2A2A2D] px-2 py-1 text-sm text-[#F3F0F0] transition-colors hover:bg-[#3A3A3D]"
+				class="rounded bg-[#2A2A2D] px-1 text-xs font-bold text-[#F3F0F0] transition-colors hover:bg-[#3A3A3D]"
 			>
-				Random
+				random
 			</button>
 		</div>
 		<select
