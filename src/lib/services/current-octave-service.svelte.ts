@@ -2,8 +2,9 @@ import { Octave } from '$lib/types/octave';
 
 export class CurrentOctaveService {
 	private static instance: CurrentOctaveService;
+	private static readonly STORAGE_KEY = 'current-octave-id';
 
-	#currentOctave = $state<Octave>(Octave.four);
+	#currentOctave = $state<Octave>(this.getStoredOctave());
 
 	private constructor() {}
 
@@ -21,6 +22,28 @@ export class CurrentOctaveService {
 	public setOctave(octave: Octave): void {
 		if (Octave.asList.includes(octave)) {
 			this.#currentOctave = octave;
+			this.saveOctaveToStorage(octave);
+		}
+	}
+
+	private getStoredOctave(): Octave {
+		try {
+			const stored = localStorage.getItem(CurrentOctaveService.STORAGE_KEY);
+			const octave = Octave.asList.find((o) => o.id === stored);
+			if (octave) {
+				return octave;
+			}
+		} catch (error) {
+			console.warn('Failed to read octave from localStorage:', error);
+		}
+		return Octave.four;
+	}
+
+	private saveOctaveToStorage(octave: Octave): void {
+		try {
+			localStorage.setItem(CurrentOctaveService.STORAGE_KEY, octave.id);
+		} catch (error) {
+			console.warn('Failed to save octave to localStorage:', error);
 		}
 	}
 }
