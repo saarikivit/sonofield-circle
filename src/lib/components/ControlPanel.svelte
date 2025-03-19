@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import {
 		CurrentKeyService,
@@ -61,6 +62,10 @@
 		const select = event.target as HTMLSelectElement;
 		const value = select.value;
 		presetService.setPreset(value);
+	}
+
+	function handleHideUI() {
+		goto('?hidden=true', { replaceState: true });
 	}
 </script>
 
@@ -128,4 +133,11 @@
 			{/each}
 		</select>
 	</div>
+
+	<button
+		onclick={handleHideUI}
+		class="ml-auto rounded-md border border-[#3A3A3D] bg-[#2A2A2D] px-3 py-2 text-[#F3F0F0] hover:bg-[#3A3A3D] focus:border-[#F3F0F0] focus:outline-none"
+	>
+		Hide UI
+	</button>
 </div>
