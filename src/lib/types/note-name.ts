@@ -1,21 +1,22 @@
 export class NoteName {
-	public static readonly c = new NoteName('C', 0, 5);
-	public static readonly cSharpDb = new NoteName('C#/Db', 1, 6);
-	public static readonly d = new NoteName('D', 2, 7);
-	public static readonly dSharpEb = new NoteName('D#/Eb', 3, 8);
-	public static readonly e = new NoteName('E', 4, 9);
-	public static readonly f = new NoteName('F', 5, 10);
-	public static readonly fSharpGb = new NoteName('F#/Gb', 6, 11);
-	public static readonly g = new NoteName('G', 7, 0);
-	public static readonly gSharpAb = new NoteName('G#/Ab', 8, 1);
-	public static readonly a = new NoteName('A', 9, 2);
-	public static readonly aSharpBb = new NoteName('A#/Bb', 10, 3);
-	public static readonly b = new NoteName('B', 11, 4);
+	public static readonly c = new NoteName('c', 'C', 0, 5);
+	public static readonly cSharpDb = new NoteName('db', 'C#/Db', 1, 6);
+	public static readonly d = new NoteName('d', 'D', 2, 7);
+	public static readonly dSharpEb = new NoteName('eb', 'D#/Eb', 3, 8);
+	public static readonly e = new NoteName('e', 'E', 4, 9);
+	public static readonly f = new NoteName('f', 'F', 5, 10);
+	public static readonly fSharpGb = new NoteName('gb', 'F#/Gb', 6, 11);
+	public static readonly g = new NoteName('g', 'G', 7, 0);
+	public static readonly gSharpAb = new NoteName('ab', 'G#/Ab', 8, 1);
+	public static readonly a = new NoteName('a', 'A', 9, 2);
+	public static readonly aSharpBb = new NoteName('bb', 'A#/Bb', 10, 3);
+	public static readonly b = new NoteName('b', 'B', 11, 4);
 
 	constructor(
-		public name: string,
-		public distance: number,
-		public distanceFromG: number
+		public readonly id: string,
+		public readonly name: string,
+		public readonly distance: number,
+		public readonly distanceFromG: number
 	) {}
 
 	public static readonly asToneList: NoteName[] = [
