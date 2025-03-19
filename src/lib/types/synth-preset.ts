@@ -1,6 +1,6 @@
 import * as Tone from 'tone';
 
-interface SynthConfig {
+export interface SynthConfig {
 	id: string;
 	name: string;
 	type: 'poly' | 'mono';
