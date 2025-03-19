@@ -1,4 +1,4 @@
-import { SynthEffect, SynthFilter, SynthPreset } from '$lib/types/synth-preset';
+import { SynthEffect, SynthPreset } from '$lib/types/synth-preset';
 import * as Tone from 'tone';
 import type { CurrentPresetService } from './current-preset-service.svelte';
 
@@ -30,23 +30,14 @@ export class SynthService {
 		});
 		this.masterCompressor = compressor;
 
-		// Create master channel with moderate gain reduction
-		const channel = new Tone.Channel({
-			volume: -6, // Reduce overall volume to prevent clipping
-			pan: 0
-		}).toDestination();
-		this.masterChannel = channel;
-
-		// Initialize and connect effects
+		// Initialize effects
 		const reverb = this.reverb;
 		const chorus = this.chorus;
 		this.masterReverb = reverb;
 		this.masterChorus = chorus;
 
-		// Connect effects chain: effects -> compressor -> master channel -> destination
-		reverb.connect(compressor);
-		chorus.connect(compressor);
-		compressor.connect(channel);
+		// Chain effects: reverb -> chorus -> compressor -> Tone.Master
+		reverb.chain(chorus, compressor, Tone.Master);
 	}
 
 	private droneSynth?: Tone.PolySynth;
@@ -68,13 +59,6 @@ export class SynthService {
 
 	private get chorus() {
 		return new Tone.Chorus(SynthEffect.chorus.config);
-	}
-
-	private get melodyFilter() {
-		const filter = new Tone.Filter(SynthFilter.melodyFilter.config);
-		filter.connect(this.masterReverb!);
-		filter.connect(this.masterChorus!);
-		return filter;
 	}
 
 	public async initialize() {
@@ -119,7 +103,7 @@ export class SynthService {
 		}
 
 		// Connect through filter then to effects for parallel processing
-		this.melodySynth.connect(this.melodyFilter);
+		this.melodySynth.connect(this.masterReverb!);
 	}
 
 	private midiToNote(midi: number): string {
