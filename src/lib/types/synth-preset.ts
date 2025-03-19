@@ -8,6 +8,30 @@ export interface SynthConfig {
 }
 
 export class SynthPreset {
+	public static readonly drone: SynthConfig = {
+		id: 'drone',
+		name: 'Drone',
+		type: 'mono',
+		config: {
+			oscillator: {
+				type: 'sine',
+				phase: 0,
+				volume: 0,
+				mute: false,
+				onstop: () => {}
+			},
+			envelope: {
+				attack: 2,
+				decay: 0.2,
+				sustain: 1,
+				release: 3,
+				attackCurve: 'linear',
+				decayCurve: 'exponential',
+				releaseCurve: 'exponential'
+			}
+		}
+	};
+
 	public static readonly default: SynthConfig = {
 		id: 'default',
 		name: 'Default',

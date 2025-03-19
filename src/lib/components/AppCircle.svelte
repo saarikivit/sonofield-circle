@@ -2,6 +2,7 @@
 	import {
 		CircleService,
 		CurrentKeyService,
+		CurrentOctaveService,
 		CurrentPresetService,
 		NoteNameHelper,
 		SynthService
@@ -13,7 +14,8 @@
 	const presetService = CurrentPresetService.getInstance();
 	const synthService = SynthService.getInstance(presetService);
 	const tonicService = CurrentKeyService.getInstance();
-	const circleService = CircleService.getInstance(synthService, tonicService);
+	const octaveService = CurrentOctaveService.getInstance();
+	const circleService = CircleService.getInstance(synthService, tonicService, octaveService);
 
 	$effect(() => {
 		circleService.initialize();

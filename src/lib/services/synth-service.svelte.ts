@@ -14,7 +14,7 @@ export class SynthService {
 		return SynthService.instance;
 	}
 
-	private droneSynth?: Tone.PolySynth;
+	private droneSynth?: Tone.MonoSynth;
 	private melodySynth?: Tone.PolySynth | Tone.MonoSynth;
 
 	#isInitialized = $state(false);
@@ -31,19 +31,7 @@ export class SynthService {
 		await Tone.start();
 
 		// Initialize drone synth with a deep, rich sound
-		this.droneSynth = new Tone.PolySynth(Tone.Synth, {
-			oscillator: {
-				type: 'sine'
-			},
-			envelope: {
-				attack: 2,
-				decay: 0.2,
-				sustain: 1,
-				release: 3
-			}
-		}).toDestination();
-
-		this.droneSynth.volume.value = -10; // Slightly quieter for background
+		this.droneSynth = new Tone.MonoSynth(SynthPreset.drone.config).toDestination();
 
 		// Initialize melody synth with default preset
 		this.setMelodySynth(this.currentPresetService.currentPreset.id);
@@ -88,7 +76,7 @@ export class SynthService {
 		if (!this.#isPlaying) return;
 		this.#isPlaying = false;
 
-		this.droneSynth?.releaseAll();
+		this.droneSynth?.triggerRelease();
 	}
 
 	public stopMelody(midi: number) {

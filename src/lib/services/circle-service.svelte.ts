@@ -1,12 +1,12 @@
 import {
 	CurrentKeyService,
+	CurrentOctaveService,
 	DegreeHelper,
 	NoteNameHelper,
 	SynthService,
 	type AppRiveEvent
 } from '$lib';
 import { NoteDegree } from '$lib/types/note-degree';
-import { Octave } from '$lib/types/octave';
 import * as rive from '@rive-app/canvas';
 
 export class CircleService {
@@ -14,15 +14,17 @@ export class CircleService {
 
 	private constructor(
 		private synthService: SynthService,
-		private tonicService: CurrentKeyService
+		private tonicService: CurrentKeyService,
+		private octaveService: CurrentOctaveService
 	) {}
 
 	public static getInstance(
 		synthService: SynthService,
-		tonicService: CurrentKeyService
+		tonicService: CurrentKeyService,
+		octaveService: CurrentOctaveService
 	): CircleService {
 		if (!CircleService.instance) {
-			CircleService.instance = new CircleService(synthService, tonicService);
+			CircleService.instance = new CircleService(synthService, tonicService, octaveService);
 		}
 		return CircleService.instance;
 	}
@@ -113,7 +115,7 @@ export class CircleService {
 		const key = NoteNameHelper.keyRelativeToIndexAndTonicGRoot({
 			index,
 			tonic: this.tonicService.currentKey,
-			octave: Octave.four
+			octave: this.octaveService.currentOctave
 		});
 		this.synthService.stopMelody(key);
 		return this.handleDegreeUI(index, false);
@@ -125,7 +127,7 @@ export class CircleService {
 		const key = NoteNameHelper.keyRelativeToIndexAndTonicGRoot({
 			index,
 			tonic: this.tonicService.currentKey,
-			octave: Octave.four
+			octave: this.octaveService.currentOctave
 		});
 		this.synthService.playMelody(key);
 		return this.handleDegreeUI(index, true);
