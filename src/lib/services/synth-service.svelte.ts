@@ -1,14 +1,15 @@
 import { SynthPreset } from '$lib/types/synth-preset';
 import * as Tone from 'tone';
+import type { CurrentPresetService } from './current-preset-service.svelte';
 
 export class SynthService {
 	public static instance: SynthService;
 
-	private constructor() {}
+	private constructor(private currentPresetService: CurrentPresetService) {}
 
-	public static getInstance(): SynthService {
+	public static getInstance(currentPresetService: CurrentPresetService): SynthService {
 		if (!SynthService.instance) {
-			SynthService.instance = new SynthService();
+			SynthService.instance = new SynthService(currentPresetService);
 		}
 		return SynthService.instance;
 	}
@@ -24,11 +25,6 @@ export class SynthService {
 	#isPlaying = $state<boolean>(false);
 	public get isPlaying() {
 		return this.#isPlaying;
-	}
-
-	#currentPreset = $state('default');
-	public get currentPreset() {
-		return this.#currentPreset;
 	}
 
 	public async initialize() {
@@ -50,7 +46,7 @@ export class SynthService {
 		this.droneSynth.volume.value = -10; // Slightly quieter for background
 
 		// Initialize melody synth with default preset
-		this.setMelodySynth(this.#currentPreset);
+		this.setMelodySynth(this.currentPresetService.currentPreset.id);
 
 		this.#isInitialized = true;
 	}
@@ -61,6 +57,7 @@ export class SynthService {
 
 		// If there's an existing synth, dispose of it
 		this.melodySynth?.dispose();
+		this.currentPresetService.setPreset(presetId);
 
 		// Create new synth with the selected preset
 		if (preset.type === 'poly') {
@@ -68,7 +65,6 @@ export class SynthService {
 		} else {
 			this.melodySynth = new Tone.MonoSynth(preset.config).toDestination();
 		}
-		this.#currentPreset = presetId;
 	}
 
 	private midiToNote(midi: number): string {

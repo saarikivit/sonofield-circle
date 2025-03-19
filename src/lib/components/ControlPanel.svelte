@@ -2,11 +2,13 @@
 	import {
 		CurrentKeyService,
 		CurrentOctaveService,
+		CurrentPresetService,
 		MidiService,
 		NoteNameHelper,
 		OctaveHelper,
 		SynthService
 	} from '$lib';
+
 	import { NoteName } from '$lib/types/note-name';
 	import { Octave } from '$lib/types/octave';
 
@@ -16,7 +18,8 @@
 	const keyService = CurrentKeyService.getInstance();
 	const octaveService = CurrentOctaveService.getInstance();
 	const midiService = MidiService.getInstance();
-	const synthService = SynthService.getInstance();
+	const presetService = CurrentPresetService.getInstance();
+	const synthService = SynthService.getInstance(presetService);
 
 	$effect(() => {
 		midiService.requestAccess(

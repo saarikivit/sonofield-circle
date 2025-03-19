@@ -1,10 +1,17 @@
 <script lang="ts">
-	import { CircleService, CurrentKeyService, NoteNameHelper, SynthService } from '$lib';
+	import {
+		CircleService,
+		CurrentKeyService,
+		CurrentPresetService,
+		NoteNameHelper,
+		SynthService
+	} from '$lib';
 	import { Octave } from '$lib/types/octave';
 
 	let size = 600; // Default size in pixels
 
-	const synthService = SynthService.getInstance();
+	const presetService = CurrentPresetService.getInstance();
+	const synthService = SynthService.getInstance(presetService);
 	const tonicService = CurrentKeyService.getInstance();
 	const circleService = CircleService.getInstance(synthService, tonicService);
 
