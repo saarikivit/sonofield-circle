@@ -58,12 +58,12 @@ export class SynthService {
 		this.#droneChorus = new Tone.Chorus(SynthEffect.chorus.config);
 
 		this.melodyInputChannel.chain(
-			this.#melodyReverb,
 			this.#melodyChorus,
+			this.#melodyReverb,
 			compressor,
 			masterChannel
 		);
-		this.droneInputChannel.chain(this.#droneReverb, this.#droneChorus, compressor, masterChannel);
+		this.droneInputChannel.chain(this.#droneChorus, this.#droneReverb, compressor, masterChannel);
 	}
 
 	private droneSynth?: Tone.PolySynth;
