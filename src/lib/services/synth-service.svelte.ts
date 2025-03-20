@@ -157,4 +157,20 @@ export class SynthService {
 			this.melodySynth.triggerRelease();
 		}
 	}
+
+	public configureMelodySynth(options: Partial<Tone.SynthOptions>) {
+		if (!this.melodySynth) return;
+		this.melodySynth.set({
+			...this.melodySynth.get(),
+			...options
+		});
+	}
+
+	public configureDroneSynth(options: Partial<Tone.SynthOptions>) {
+		if (!this.droneSynth) return;
+		this.droneSynth.set({
+			...this.droneSynth.get(),
+			...options
+		});
+	}
 }
