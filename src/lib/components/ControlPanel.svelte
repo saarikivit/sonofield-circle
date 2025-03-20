@@ -8,13 +8,14 @@
 		MidiService,
 		NoteNameHelper,
 		OctaveHelper,
+		ReverbConfiguration,
 		SynthConfiguration,
 		SynthService
 	} from '$lib';
 
 	import { NoteName } from '$lib/types/note-name';
 	import { Octave } from '$lib/types/octave';
-	import { SynthPreset } from '$lib/types/synth-preset';
+	import { SynthEffect, SynthPreset } from '$lib/types/synth-preset';
 
 	const keyService = CurrentKeyService.getInstance();
 	const octaveService = CurrentOctaveService.getInstance();
@@ -149,5 +150,15 @@
 		onConfigChange={synthService.configureDroneSynth}
 		initialConfig={presetService.currentPreset.config}
 		title="Drone Synth"
+	/>
+	<ReverbConfiguration
+		onConfigChange={synthService.configureMelodyReverb}
+		initialConfig={SynthEffect.reverb.config}
+		title="Melody Reverb"
+	/>
+	<ReverbConfiguration
+		onConfigChange={synthService.configureDroneReverb}
+		initialConfig={SynthEffect.reverb.config}
+		title="Drone Reverb"
 	/>
 </div>

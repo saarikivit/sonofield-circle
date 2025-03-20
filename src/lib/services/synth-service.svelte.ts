@@ -17,6 +17,23 @@ export class SynthService {
 	private melodyInputChannel?: Tone.Channel;
 	private droneInputChannel?: Tone.Channel;
 
+	#melodyReverb?: Tone.Freeverb;
+	public get melodyReverb() {
+		return this.#melodyReverb;
+	}
+	#melodyChorus?: Tone.Chorus;
+	public get melodyChorus() {
+		return this.#melodyChorus;
+	}
+	#droneReverb?: Tone.Freeverb;
+	public get droneReverb() {
+		return this.#droneReverb;
+	}
+	#droneChorus?: Tone.Chorus;
+	public get droneChorus() {
+		return this.#droneChorus;
+	}
+
 	private initializeMasterChannel() {
 		// Create master compressor to prevent clipping
 		const compressor = new Tone.Compressor({
@@ -35,13 +52,18 @@ export class SynthService {
 		this.melodyInputChannel = new Tone.Channel();
 		this.droneInputChannel = new Tone.Channel();
 
-		const reverb = this.reverb;
-		const chorus = this.chorus;
+		this.#melodyReverb = new Tone.Freeverb(SynthEffect.reverb.config);
+		this.#melodyChorus = new Tone.Chorus(SynthEffect.chorus.config);
+		this.#droneReverb = new Tone.Freeverb(SynthEffect.reverb.config);
+		this.#droneChorus = new Tone.Chorus(SynthEffect.chorus.config);
 
-		// Connect effects chain: effects -> compressor -> master channel -> destination
-		this.melodyInputChannel.chain(reverb, chorus, compressor, masterChannel);
-		// Connect drone synth to compressor and master channel
-		this.droneInputChannel.chain(compressor, masterChannel);
+		this.melodyInputChannel.chain(
+			this.#melodyReverb,
+			this.#melodyChorus,
+			compressor,
+			masterChannel
+		);
+		this.droneInputChannel.chain(this.#droneReverb, this.#droneChorus, compressor, masterChannel);
 	}
 
 	private droneSynth?: Tone.PolySynth;
@@ -57,14 +79,6 @@ export class SynthService {
 		return this.#isPlaying;
 	}
 
-	private get reverb() {
-		return new Tone.Freeverb(SynthEffect.reverb.config);
-	}
-
-	private get chorus() {
-		return new Tone.Chorus(SynthEffect.chorus.config);
-	}
-
 	public async initialize() {
 		await Tone.start();
 
@@ -73,6 +87,7 @@ export class SynthService {
 		this.setDroneSynth();
 		this.setMelodySynth(this.currentPresetService.currentPreset.id);
 
+		console.log('SynthService initialized');
 		this.#isInitialized = true;
 	}
 
@@ -161,7 +176,7 @@ export class SynthService {
 	public configureMelodySynth = (options: Partial<Tone.SynthOptions>) => {
 		if (!this.melodySynth) return;
 
-		const nextOptions = this.calculateNextOptions(this.melodySynth.get(), options);
+		const nextOptions = this.calculateNextSynthOptions(this.melodySynth.get(), options);
 
 		this.melodySynth.set(nextOptions);
 	};
@@ -169,12 +184,12 @@ export class SynthService {
 	public configureDroneSynth = (options: Partial<Tone.SynthOptions>) => {
 		if (!this.droneSynth) return;
 
-		const nextOptions = this.calculateNextOptions(this.droneSynth.get(), options);
+		const nextOptions = this.calculateNextSynthOptions(this.droneSynth.get(), options);
 
 		this.droneSynth.set(nextOptions);
 	};
 
-	private calculateNextOptions = (
+	private calculateNextSynthOptions = (
 		currentOptions: Tone.SynthOptions,
 		nextOptions: Partial<Tone.SynthOptions>
 	) => {
@@ -190,6 +205,62 @@ export class SynthService {
 		options.oscillator = {
 			...currentOptions.oscillator,
 			...nextOptions.oscillator
+		};
+
+		return options;
+	};
+
+	public configureMelodyReverb = (options: Partial<Tone.FreeverbOptions>) => {
+		if (!this.#melodyReverb) return;
+
+		const nextOptions = this.calculateNextReverbOptions(this.#melodyReverb.get(), options);
+
+		this.#melodyReverb.set(nextOptions);
+	};
+
+	public configureMelodyChorus = (options: Partial<Tone.ChorusOptions>) => {
+		if (!this.#melodyChorus) return;
+
+		const nextOptions = this.calculateNextChorusOptions(this.#melodyChorus.get(), options);
+
+		this.#melodyChorus.set(nextOptions);
+	};
+
+	public configureDroneReverb = (options: Partial<Tone.FreeverbOptions>) => {
+		if (!this.#droneReverb) return;
+
+		const nextOptions = this.calculateNextReverbOptions(this.#droneReverb.get(), options);
+
+		this.#droneReverb.set(nextOptions);
+	};
+
+	public configureDroneChorus = (options: Partial<Tone.ChorusOptions>) => {
+		if (!this.#droneChorus) return;
+
+		const nextOptions = this.calculateNextChorusOptions(this.#droneChorus.get(), options);
+
+		this.#droneChorus.set(nextOptions);
+	};
+
+	private calculateNextReverbOptions = (
+		currentOptions: Tone.FreeverbOptions,
+		nextOptions: Partial<Tone.FreeverbOptions>
+	) => {
+		let options = {
+			...currentOptions,
+			...nextOptions
+		};
+
+		return options;
+	};
+
+	private calculateNextChorusOptions = (
+		currentOptions: Tone.ChorusOptions,
+		nextOptions: Partial<Tone.ChorusOptions>
+	) => {
+		let options = {
+			...currentOptions,
+			...nextOptions
 		};
 
 		return options;
