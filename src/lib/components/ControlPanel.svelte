@@ -22,20 +22,30 @@
 	const synthService = SynthService.getInstance(presetService);
 	const circleService = CircleService.getInstance(synthService, keyService, octaveService);
 
+	const onKeyDown = (key: number) => {
+		synthService.playMelody(key);
+		const index = DegreeHelper.getCOFIndexByKey(key);
+		circleService.highlightDegree(index);
+	};
+
+	const onKeyUp = (key: number) => {
+		synthService.stopMelody(key);
+		const index = DegreeHelper.getCOFIndexByKey(key);
+		circleService.unhighlightDegree(index);
+	};
+
 	$effect(() => {
-		midiService.requestAccess({
-			onKeyDown: (key) => {
-				synthService.playMelody(key);
-				const index = DegreeHelper.getCOFIndexByKey(key);
-				circleService.highlightDegree(index);
-			},
-			onKeyUp: (key) => {
-				synthService.stopMelody(key);
-				const index = DegreeHelper.getCOFIndexByKey(key);
-				circleService.unhighlightDegree(index);
-			}
+		midiService.requestAccessAndGetDevices({
+			onKeyDown,
+			onKeyUp
 		});
 	});
+
+	function handleMidiDeviceChange(event: Event) {
+		const select = event.target as HTMLSelectElement;
+		const value = select.value;
+		midiService.setSelectedDevice({ deviceId: value, onKeyDown, onKeyUp });
+	}
 
 	function handleKeyChange(event: Event) {
 		const select = event.target as HTMLSelectElement;
@@ -63,19 +73,18 @@
 </script>
 
 <div class="flex items-center gap-4">
-	<!-- <div class="flex flex-col gap-1">
+	<div class="flex flex-col gap-1">
 		<label for="midi-device" class="text-sm text-[#F3F0F0]">MIDI Device</label>
 		<select
 			id="midi-device"
-			bind:value={selectedDevice}
+			value={midiService.selectedDevice?.id || null}
 			class="rounded-md border border-[#3A3A3D] bg-[#2A2A2D] px-3 py-2 text-[#F3F0F0] focus:border-[#F3F0F0] focus:outline-none"
 		>
-			<option value="">Select MIDI device</option>
-			{#each midiDevices as device}
-				<option value={device}>{device}</option>
+			{#each midiService.availableDevices as device}
+				<option value={device.id}>{device.manufacturer} {device.name}</option>
 			{/each}
 		</select>
-	</div> -->
+	</div>
 
 	<div class="flex flex-col gap-1">
 		<div class="flex items-center gap-2">
