@@ -1,8 +1,10 @@
 <script lang="ts">
 	import {
+		CircleService,
 		CurrentKeyService,
 		CurrentOctaveService,
 		CurrentPresetService,
+		DegreeHelper,
 		MidiService,
 		NoteNameHelper,
 		OctaveHelper,
@@ -18,16 +20,21 @@
 	const midiService = MidiService.getInstance();
 	const presetService = CurrentPresetService.getInstance();
 	const synthService = SynthService.getInstance(presetService);
+	const circleService = CircleService.getInstance(synthService, keyService, octaveService);
 
 	$effect(() => {
-		midiService.requestAccess(
-			(key) => {
+		midiService.requestAccess({
+			onKeyDown: (key) => {
 				synthService.playMelody(key);
+				const index = DegreeHelper.getCOFIndexByKey(key);
+				circleService.highlightDegree(index);
 			},
-			(key) => {
+			onKeyUp: (key) => {
 				synthService.stopMelody(key);
+				const index = DegreeHelper.getCOFIndexByKey(key);
+				circleService.unhighlightDegree(index);
 			}
-		);
+		});
 	});
 
 	function handleKeyChange(event: Event) {

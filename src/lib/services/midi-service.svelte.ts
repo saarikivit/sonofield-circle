@@ -20,7 +20,13 @@ export class MidiService {
 		return MidiService.instance;
 	}
 
-	public requestAccess(onKeyDown: (key: number) => void, onKeyUp: (key: number) => void) {
+	public requestAccess({
+		onKeyDown,
+		onKeyUp
+	}: {
+		onKeyDown: (key: number) => void;
+		onKeyUp: (key: number) => void;
+	}) {
 		if (navigator.requestMIDIAccess) {
 			navigator
 				.requestMIDIAccess({

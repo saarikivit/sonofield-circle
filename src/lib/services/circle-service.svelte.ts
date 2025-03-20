@@ -29,7 +29,7 @@ export class CircleService {
 		return CircleService.instance;
 	}
 
-	public r: rive.Rive | null = null;
+	private r: rive.Rive | null = null;
 
 	public initialize() {
 		this.r = new rive.Rive({
@@ -39,10 +39,8 @@ export class CircleService {
 			artboard: 'Sonofield',
 			stateMachines: 'Sonofield',
 			onLoad: () => {
-				// TODO canvas sizing controls
 				this.resetCanvas();
 				NoteDegree.asCOFList.forEach((degree) => {
-					// TODO only the current mode
 					this.r!.setBooleanStateAtPath('isHighlighted', true, `Nip ${degree.name}`);
 				});
 			}
@@ -147,6 +145,14 @@ export class CircleService {
 		this.unhighlightAll();
 		this.r!.removeAllRiveEventListeners();
 		this.r!.cleanup();
+	};
+
+	public highlightDegree = (index: number) => {
+		this.handleDegreeUI(index, true);
+	};
+
+	public unhighlightDegree = (index: number) => {
+		this.handleDegreeUI(index, false);
 	};
 
 	private handleDegreeUI = (index: number, value: boolean) => {

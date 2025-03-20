@@ -31,4 +31,19 @@ export class NoteDegree {
 		this.flatSeven,
 		this.four
 	];
+
+	public static readonly asToneList = [
+		this.one,
+		this.flatTwo,
+		this.two,
+		this.flatThree,
+		this.three,
+		this.four,
+		this.sharpFour,
+		this.five,
+		this.flatSix,
+		this.six,
+		this.flatSeven,
+		this.seven
+	];
 }
