@@ -13,14 +13,20 @@ export interface SynthFilterConfig {
 	config: Partial<Tone.FilterOptions>;
 }
 
-export interface SynthEffectConfig {
+export interface ChorusConfig {
 	id: string;
 	name: string;
-	config: Partial<Tone.FreeverbOptions | Tone.ChorusOptions>;
+	config: Partial<Tone.ChorusOptions>;
+}
+
+export interface ReverbConfig {
+	id: string;
+	name: string;
+	config: Partial<Tone.FreeverbOptions>;
 }
 
 export class SynthEffect {
-	public static readonly reverb: SynthEffectConfig = {
+	public static readonly reverb: ReverbConfig = {
 		id: 'reverb',
 		name: 'Reverb',
 		config: {
@@ -30,19 +36,17 @@ export class SynthEffect {
 		}
 	};
 
-	public static readonly chorus: SynthEffectConfig = {
+	public static readonly chorus: ChorusConfig = {
 		id: 'chorus',
 		name: 'Chorus',
 		config: {
 			depth: 0.5,
 			feedback: 0.5,
 			delayTime: 0.1,
-			roomSize: 0.5,
 			wet: 0.5,
 			type: 'sine',
 			spread: 180,
-			dampening: undefined,
-			frequency: undefined
+			frequency: 0
 		}
 	};
 }

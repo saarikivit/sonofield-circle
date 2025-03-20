@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		ChorusConfiguration,
 		CircleService,
 		CurrentKeyService,
 		CurrentOctaveService,
@@ -160,5 +161,15 @@
 		onConfigChange={synthService.configureDroneReverb}
 		initialConfig={SynthEffect.reverb.config}
 		title="Drone Reverb"
+	/>
+	<ChorusConfiguration
+		onConfigChange={synthService.configureMelodyChorus}
+		initialConfig={SynthEffect.chorus.config}
+		title="Melody Chorus"
+	/>
+	<ChorusConfiguration
+		onConfigChange={synthService.configureDroneChorus}
+		initialConfig={SynthEffect.chorus.config}
+		title="Drone Chorus"
 	/>
 </div>
