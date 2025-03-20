@@ -9,7 +9,10 @@
 	} from '$lib';
 	import { Octave } from '$lib/types/octave';
 
-	let size = 600; // Default size in pixels
+	let innerWidth = $state(window.innerWidth);
+	let innerHeight = $state(window.innerHeight);
+	let minDimension = $derived(Math.min(innerWidth, innerHeight));
+	let size = $derived(Math.min(minDimension, 600));
 
 	const presetService = CurrentPresetService.getInstance();
 	const synthService = SynthService.getInstance(presetService);
@@ -46,6 +49,8 @@
 		synthService.stopAll();
 	}
 </script>
+
+<svelte:window bind:innerWidth bind:innerHeight />
 
 <div class="relative flex w-full items-center justify-center">
 	<canvas id="circle" style="width: {size}px; height: {size}px;"></canvas>

@@ -40,7 +40,7 @@ export class CircleService {
 			stateMachines: 'Sonofield',
 			onLoad: () => {
 				// TODO canvas sizing controls
-				this.r!.resizeDrawingSurfaceToCanvas();
+				this.resetCanvas();
 				NoteDegree.asCOFList.forEach((degree) => {
 					// TODO only the current mode
 					this.r!.setBooleanStateAtPath('isHighlighted', true, `Nip ${degree.name}`);
@@ -55,6 +55,10 @@ export class CircleService {
 			}
 		});
 	}
+
+	public resetCanvas = () => {
+		this.r!.resizeDrawingSurfaceToCanvas();
+	};
 
 	private handleRiveEvent = (name: AppRiveEvent) => {
 		switch (name) {
