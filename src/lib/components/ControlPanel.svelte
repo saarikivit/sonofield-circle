@@ -8,6 +8,7 @@
 		MidiService,
 		NoteNameHelper,
 		OctaveHelper,
+		SynthConfiguration,
 		SynthService
 	} from '$lib';
 
@@ -136,4 +137,11 @@
 			{/each}
 		</select>
 	</div>
+</div>
+
+<div class="flex flex-col gap-1">
+	<SynthConfiguration
+		onConfigChange={synthService.configureMelodySynth}
+		initialConfig={presetService.currentPreset.config}
+	/>
 </div>

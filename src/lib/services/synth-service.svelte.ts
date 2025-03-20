@@ -159,18 +159,40 @@ export class SynthService {
 	}
 
 	public configureMelodySynth(options: Partial<Tone.SynthOptions>) {
+		console.log(options, this.melodySynth);
 		if (!this.melodySynth) return;
-		this.melodySynth.set({
-			...this.melodySynth.get(),
-			...options
-		});
+
+		let nextOptions = {
+			...this.melodySynth.get()
+		};
+
+		nextOptions.envelope = {
+			...nextOptions.envelope,
+			...options.envelope
+		};
+		nextOptions.oscillator = {
+			...nextOptions.oscillator,
+			...options.oscillator
+		};
+
+		this.melodySynth.set(nextOptions);
 	}
 
 	public configureDroneSynth(options: Partial<Tone.SynthOptions>) {
 		if (!this.droneSynth) return;
-		this.droneSynth.set({
-			...this.droneSynth.get(),
-			...options
-		});
+		let nextOptions = {
+			...this.droneSynth.get()
+		};
+
+		nextOptions.envelope = {
+			...nextOptions.envelope,
+			...options.envelope
+		};
+		nextOptions.oscillator = {
+			...nextOptions.oscillator,
+			...options.oscillator
+		};
+
+		this.droneSynth.set(nextOptions);
 	}
 }
