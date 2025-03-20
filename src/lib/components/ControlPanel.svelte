@@ -78,6 +78,7 @@
 		<select
 			id="midi-device"
 			value={midiService.selectedDevice?.id || null}
+			onchange={handleMidiDeviceChange}
 			class="rounded-md border border-[#3A3A3D] bg-[#2A2A2D] px-3 py-2 text-[#F3F0F0] focus:border-[#F3F0F0] focus:outline-none"
 		>
 			{#each midiService.availableDevices as device}
