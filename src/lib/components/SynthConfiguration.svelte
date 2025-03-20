@@ -1,5 +1,5 @@
 <script lang="ts">
-	const OSCILLATOR_TYPES = ['sine', 'triangle', 'sawtooth'] as const;
+	const OSCILLATOR_TYPES = ['sine', 'triangle', 'sawtooth', 'square'] as const;
 
 	let { onConfigChange, initialConfig, title } = $props();
 
