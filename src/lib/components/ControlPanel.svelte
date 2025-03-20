@@ -139,9 +139,15 @@
 	</div>
 </div>
 
-<div class="flex flex-col gap-1">
+<div class="flex flex-row gap-4">
 	<SynthConfiguration
 		onConfigChange={synthService.configureMelodySynth}
 		initialConfig={presetService.currentPreset.config}
+		title="Melody Synth"
+	/>
+	<SynthConfiguration
+		onConfigChange={synthService.configureDroneSynth}
+		initialConfig={presetService.currentPreset.config}
+		title="Drone Synth"
 	/>
 </div>

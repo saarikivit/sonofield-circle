@@ -158,41 +158,40 @@ export class SynthService {
 		}
 	}
 
-	public configureMelodySynth(options: Partial<Tone.SynthOptions>) {
-		console.log(options, this.melodySynth);
+	public configureMelodySynth = (options: Partial<Tone.SynthOptions>) => {
 		if (!this.melodySynth) return;
 
-		let nextOptions = {
-			...this.melodySynth.get()
-		};
-
-		nextOptions.envelope = {
-			...nextOptions.envelope,
-			...options.envelope
-		};
-		nextOptions.oscillator = {
-			...nextOptions.oscillator,
-			...options.oscillator
-		};
+		const nextOptions = this.calculateNextOptions(this.melodySynth.get(), options);
 
 		this.melodySynth.set(nextOptions);
-	}
+	};
 
-	public configureDroneSynth(options: Partial<Tone.SynthOptions>) {
+	public configureDroneSynth = (options: Partial<Tone.SynthOptions>) => {
 		if (!this.droneSynth) return;
-		let nextOptions = {
-			...this.droneSynth.get()
-		};
 
-		nextOptions.envelope = {
-			...nextOptions.envelope,
-			...options.envelope
-		};
-		nextOptions.oscillator = {
-			...nextOptions.oscillator,
-			...options.oscillator
-		};
+		const nextOptions = this.calculateNextOptions(this.droneSynth.get(), options);
 
 		this.droneSynth.set(nextOptions);
-	}
+	};
+
+	private calculateNextOptions = (
+		currentOptions: Tone.SynthOptions,
+		nextOptions: Partial<Tone.SynthOptions>
+	) => {
+		let options = {
+			...currentOptions,
+			portamento: nextOptions.portamento
+		};
+
+		options.envelope = {
+			...currentOptions.envelope,
+			...nextOptions.envelope
+		};
+		options.oscillator = {
+			...currentOptions.oscillator,
+			...nextOptions.oscillator
+		};
+
+		return options;
+	};
 }
