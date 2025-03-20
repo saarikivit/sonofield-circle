@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
 	import {
 		CurrentKeyService,
 		CurrentOctaveService,
@@ -15,19 +13,11 @@
 	import { Octave } from '$lib/types/octave';
 	import { SynthPreset } from '$lib/types/synth-preset';
 
-	let midiDevices: string[] = [];
-	let selectedDevice: string = $state('');
-	let isHidden = $state(false);
-
 	const keyService = CurrentKeyService.getInstance();
 	const octaveService = CurrentOctaveService.getInstance();
 	const midiService = MidiService.getInstance();
 	const presetService = CurrentPresetService.getInstance();
 	const synthService = SynthService.getInstance(presetService);
-
-	$effect(() => {
-		isHidden = $page.url.searchParams.get('hidden') === 'true';
-	});
 
 	$effect(() => {
 		midiService.requestAccess(
@@ -63,13 +53,9 @@
 		const value = select.value;
 		presetService.setPreset(value);
 	}
-
-	function handleHideUI() {
-		goto('?hidden=true', { replaceState: true });
-	}
 </script>
 
-<div class="flex items-center gap-4" class:invisible={isHidden}>
+<div class="flex items-center gap-4">
 	<!-- <div class="flex flex-col gap-1">
 		<label for="midi-device" class="text-sm text-[#F3F0F0]">MIDI Device</label>
 		<select
@@ -133,11 +119,4 @@
 			{/each}
 		</select>
 	</div>
-
-	<button
-		onclick={handleHideUI}
-		class="ml-auto rounded-md border border-[#3A3A3D] bg-[#2A2A2D] px-3 py-2 text-[#F3F0F0] hover:bg-[#3A3A3D] focus:border-[#F3F0F0] focus:outline-none"
-	>
-		Hide UI
-	</button>
 </div>

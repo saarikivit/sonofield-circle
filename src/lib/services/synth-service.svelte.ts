@@ -14,8 +14,6 @@ export class SynthService {
 
 	private constructor(private currentPresetService: CurrentPresetService) {}
 
-	private masterChannel?: Tone.Channel;
-	private masterCompressor?: Tone.Compressor;
 	private melodyInputChannel?: Tone.Channel;
 	private droneInputChannel?: Tone.Channel;
 
@@ -27,14 +25,12 @@ export class SynthService {
 			attack: 0.05,
 			release: 0.1
 		});
-		this.masterCompressor = compressor;
 
 		// Create master channel with moderate gain reduction
-		const channel = new Tone.Channel({
+		const masterChannel = new Tone.Channel({
 			volume: -6,
 			pan: 0
 		}).toDestination();
-		this.masterChannel = channel;
 
 		this.melodyInputChannel = new Tone.Channel();
 		this.droneInputChannel = new Tone.Channel();
@@ -43,9 +39,9 @@ export class SynthService {
 		const chorus = this.chorus;
 
 		// Connect effects chain: effects -> compressor -> master channel -> destination
-		this.melodyInputChannel.chain(reverb, chorus, compressor, channel);
+		this.melodyInputChannel.chain(reverb, chorus, compressor, masterChannel);
 		// Connect drone synth to compressor and master channel
-		this.droneInputChannel.chain(compressor, channel);
+		this.droneInputChannel.chain(compressor, masterChannel);
 	}
 
 	private droneSynth?: Tone.PolySynth;

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import {
 		CircleService,
 		CurrentKeyService,
@@ -11,7 +10,6 @@
 	import { Octave } from '$lib/types/octave';
 
 	let size = 600; // Default size in pixels
-	let isHidden = $state(false);
 
 	const presetService = CurrentPresetService.getInstance();
 	const synthService = SynthService.getInstance(presetService);
@@ -21,7 +19,6 @@
 
 	$effect(() => {
 		circleService.initialize();
-		isHidden = $page.url.searchParams.get('hidden') === 'true';
 		return () => {
 			circleService.dispose();
 		};
@@ -57,7 +54,7 @@
 		class="absolute flex h-32 w-32 items-center justify-center opacity-50"
 	>
 		{#if synthService.isPlaying}
-			<img src="/icons/pause.svg" alt="Pause" class="h-32 w-32" class:opacity-0={isHidden} />
+			<img src="/icons/pause.svg" alt="Pause" class="h-32 w-32" />
 		{:else}
 			<img src="/icons/play.svg" alt="Play" class="h-32 w-32" />
 		{/if}
