@@ -97,12 +97,12 @@ export class SynthService {
 		if (preset.type === 'poly') {
 			this.melodySynth = new Tone.PolySynth(Tone.Synth, {
 				...preset.config,
-				volume: -6 // Add volume control
+				volume: -6
 			});
 		} else {
 			this.melodySynth = new Tone.MonoSynth({
 				...preset.config,
-				volume: -6 // Add volume control
+				volume: -6
 			});
 		}
 
@@ -137,7 +137,8 @@ export class SynthService {
 	public stopMelody(midi: number) {
 		const note = this.midiToNote(midi);
 		if (this.melodySynth instanceof Tone.PolySynth) {
-			this.melodySynth?.triggerRelease(note);
+			// Properly release the voice for this note
+			this.melodySynth.triggerRelease(note);
 		} else if (this.melodySynth instanceof Tone.MonoSynth) {
 			this.melodySynth.triggerRelease();
 		}
@@ -145,8 +146,12 @@ export class SynthService {
 
 	public stopAll() {
 		this.stopDrone();
+		this.stopAllMelodyNotes();
+	}
 
+	private stopAllMelodyNotes() {
 		if (this.melodySynth instanceof Tone.PolySynth) {
+			// Use releaseAll to properly clear all voices
 			this.melodySynth.releaseAll();
 		} else if (this.melodySynth instanceof Tone.MonoSynth) {
 			this.melodySynth.triggerRelease();
