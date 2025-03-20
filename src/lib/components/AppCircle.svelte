@@ -13,6 +13,7 @@
 	let innerHeight = $state(window.innerHeight);
 	let minDimension = $derived(Math.min(innerWidth, innerHeight));
 	let size = $derived(Math.min(minDimension, 600));
+	let playPauseSize = $derived(size * 0.15);
 
 	const presetService = CurrentPresetService.getInstance();
 	const synthService = SynthService.getInstance(presetService);
@@ -56,12 +57,13 @@
 	<canvas id="circle" style="width: {size}px; height: {size}px;"></canvas>
 	<button
 		onclick={handlePlayPause}
-		class="absolute flex h-32 w-32 items-center justify-center opacity-50"
+		class="absolute flex items-center justify-center opacity-50"
+		style="width: {playPauseSize}px; height: {playPauseSize}px;"
 	>
 		{#if synthService.isPlaying}
-			<img src="/icons/pause.svg" alt="Pause" class="h-32 w-32" />
+			<img src="/icons/pause.svg" alt="Pause" style="width: 100%; height: 100%;" />
 		{:else}
-			<img src="/icons/play.svg" alt="Play" class="h-32 w-32" />
+			<img src="/icons/play.svg" alt="Play" style="width: 100%; height: 100%;" />
 		{/if}
 	</button>
 </div>
