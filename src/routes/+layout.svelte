@@ -5,7 +5,7 @@
 </script>
 
 <div class="min-h-screen bg-[#1A1A1D]">
-	<header class="w-full p-4">
+	<header class="w-full px-4 py-16">
 		<AppTitle />
 	</header>
 
