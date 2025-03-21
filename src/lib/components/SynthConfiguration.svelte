@@ -38,7 +38,7 @@
 			<select
 				id="oscillator"
 				bind:value={oscillatorType}
-				class="border-opacity-20 w-full rounded border border-[#333333] bg-[#1A1A1D] p-2 text-[#333333]"
+				class="w-full rounded-md border border-[#3A3A3D] bg-[#2A2A2D] px-3 py-2 text-[#F3F0F0] focus:border-[#F3F0F0] focus:outline-none"
 			>
 				{#each OSCILLATOR_TYPES as type}
 					<option value={type}>{type}</option>
