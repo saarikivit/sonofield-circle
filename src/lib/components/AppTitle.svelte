@@ -2,8 +2,7 @@
 	import { CircleService, Wordmark } from '$lib';
 
 	let innerWidth = $state(window.innerWidth);
-	const multiplier = 0.48;
-	let size = $derived(Math.min(innerWidth * multiplier, CircleService.maxSize * multiplier));
+	let size = $derived(Math.min(innerWidth * 0.6, CircleService.maxSize * 0.48));
 </script>
 
 <div class="flex w-full items-center justify-center">

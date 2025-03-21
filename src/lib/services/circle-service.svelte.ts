@@ -40,6 +40,7 @@ export class CircleService {
 			autoplay: true,
 			artboard: 'Sonofield',
 			stateMachines: 'Sonofield',
+			isTouchScrollEnabled: true,
 			onLoad: () => {
 				this.resetCanvas();
 				NoteDegree.asCOFList.forEach((degree) => {
