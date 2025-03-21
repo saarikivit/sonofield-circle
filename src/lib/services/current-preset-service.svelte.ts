@@ -1,4 +1,3 @@
-import { browser } from '$app/environment';
 import type { SynthConfig } from '$lib/types/synth-preset';
 import { SynthPreset } from '$lib/types/synth-preset';
 
@@ -30,7 +29,6 @@ export class CurrentPresetService {
 	}
 
 	private getStoredPreset(): SynthConfig {
-		if (!browser) return SynthPreset.default;
 		try {
 			const stored = localStorage.getItem(CurrentPresetService.STORAGE_KEY);
 			if (stored) {
@@ -46,7 +44,6 @@ export class CurrentPresetService {
 	}
 
 	private savePresetToStorage(preset: SynthConfig): void {
-		if (!browser) return;
 		try {
 			localStorage.setItem(CurrentPresetService.STORAGE_KEY, preset.id);
 		} catch (error) {

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
 	import {
 		CircleService,
 		CurrentKeyService,
@@ -10,8 +9,8 @@
 	} from '$lib';
 	import { Octave } from '$lib/types/octave';
 
-	let innerWidth = $state(browser ? window.innerWidth : 0);
-	let innerHeight = $state(browser ? window.innerHeight : 0);
+	let innerWidth = $state(window.innerWidth);
+	let innerHeight = $state(window.innerHeight);
 	let minDimension = $derived(Math.min(innerWidth, innerHeight));
 	let size = $derived(Math.min(minDimension, 600));
 	let playPauseSize = $derived(size * 0.15);

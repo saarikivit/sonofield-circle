@@ -1,4 +1,3 @@
-import { browser } from '$app/environment';
 import { Octave } from '$lib/types/octave';
 
 export class CurrentOctaveService {
@@ -28,7 +27,6 @@ export class CurrentOctaveService {
 	}
 
 	private getStoredOctave(): Octave {
-		if (!browser) return Octave.four;
 		try {
 			const stored = localStorage.getItem(CurrentOctaveService.STORAGE_KEY);
 			const octave = Octave.asList.find((o) => o.id === stored);
@@ -42,7 +40,6 @@ export class CurrentOctaveService {
 	}
 
 	private saveOctaveToStorage(octave: Octave): void {
-		if (!browser) return;
 		try {
 			localStorage.setItem(CurrentOctaveService.STORAGE_KEY, octave.id);
 		} catch (error) {
