@@ -4,6 +4,7 @@
 		CurrentKeyService,
 		CurrentOctaveService,
 		CurrentPresetService,
+		IconButton,
 		NoteNameHelper,
 		SynthService
 	} from '$lib';
@@ -55,15 +56,20 @@
 
 <div class="relative flex w-full items-center justify-center">
 	<canvas id="circle" style="width: {size}px; height: {size}px;"></canvas>
-	<button
-		onclick={handlePlayPause}
-		class="absolute flex items-center justify-center opacity-50"
-		style="width: {playPauseSize}px; height: {playPauseSize}px;"
-	>
-		{#if synthService.isPlaying}
-			<img src="/icons/pause.svg" alt="Pause" style="width: 100%; height: 100%;" />
-		{:else}
-			<img src="/icons/play.svg" alt="Play" style="width: 100%; height: 100%;" />
-		{/if}
-	</button>
+
+	{#if !synthService.isPlaying}
+		<IconButton
+			src="/icons/play.svg"
+			alt="Play"
+			size={playPauseSize + 'px'}
+			onclick={handlePlayPause}
+		/>
+	{:else}
+		<IconButton
+			src="/icons/pause.svg"
+			alt="Pause"
+			size={playPauseSize + 'px'}
+			onclick={handlePlayPause}
+		/>
+	{/if}
 </div>
