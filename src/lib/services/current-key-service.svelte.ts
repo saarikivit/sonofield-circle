@@ -1,19 +1,21 @@
 import { NoteName } from '$lib/types/note-name';
+import { getContext, setContext } from 'svelte';
 
 export class CurrentKeyService {
-	private static instance: CurrentKeyService;
 	private static readonly STORAGE_KEY = 'current-key-id';
+	private static readonly key = {};
 
-	#currentKey = $state<NoteName>(this.getStoredKey());
+	public static initializeContext(): CurrentKeyService {
+		return setContext(this.key, new CurrentKeyService());
+	}
+
+	public static getContext() {
+		return getContext(this.key) as CurrentKeyService;
+	}
 
 	private constructor() {}
 
-	public static getInstance(): CurrentKeyService {
-		if (!CurrentKeyService.instance) {
-			CurrentKeyService.instance = new CurrentKeyService();
-		}
-		return CurrentKeyService.instance;
-	}
+	#currentKey = $state<NoteName>(this.getStoredKey());
 
 	public get currentKey(): NoteName {
 		return this.#currentKey;

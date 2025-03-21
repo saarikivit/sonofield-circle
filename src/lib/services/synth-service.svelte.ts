@@ -1,15 +1,21 @@
 import { SynthEffect, SynthPreset } from '$lib/types/synth-preset';
+import { getContext, setContext } from 'svelte';
 import * as Tone from 'tone';
 import type { CurrentPresetService } from './current-preset-service.svelte';
 
 export class SynthService {
-	public static instance: SynthService;
+	private static readonly key = {};
 
-	public static getInstance(currentPresetService: CurrentPresetService): SynthService {
-		if (!SynthService.instance) {
-			SynthService.instance = new SynthService(currentPresetService);
-		}
-		return SynthService.instance;
+	public static initializeContext({
+		currentPresetService
+	}: {
+		currentPresetService: CurrentPresetService;
+	}): SynthService {
+		return setContext(this.key, new SynthService(currentPresetService));
+	}
+
+	public static getContext() {
+		return getContext(this.key) as SynthService;
 	}
 
 	private constructor(private currentPresetService: CurrentPresetService) {}

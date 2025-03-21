@@ -2,10 +2,10 @@
 	import {
 		CircleService,
 		CurrentKeyService,
-		CurrentOctaveService,
-		CurrentPresetService,
 		IconButton,
 		NoteNameHelper,
+		PauseIcon,
+		PlayIcon,
 		SynthService
 	} from '$lib';
 	import { Octave } from '$lib/types/octave';
@@ -16,11 +16,9 @@
 	let size = $derived(Math.min(minDimension, CircleService.maxSize));
 	let playPauseSize = $derived(size * 0.15);
 
-	const presetService = CurrentPresetService.getInstance();
-	const synthService = SynthService.getInstance(presetService);
-	const tonicService = CurrentKeyService.getInstance();
-	const octaveService = CurrentOctaveService.getInstance();
-	const circleService = CircleService.getInstance(synthService, tonicService, octaveService);
+	const synthService = SynthService.getContext();
+	const tonicService = CurrentKeyService.getContext();
+	const circleService = CircleService.getContext();
 
 	$effect(() => {
 		circleService.initialize();
@@ -58,18 +56,12 @@
 	<canvas id="circle" style="width: {size}px; height: {size}px;"></canvas>
 
 	{#if !synthService.isPlaying}
-		<IconButton
-			src="/icons/play.svg"
-			alt="Play"
-			size={playPauseSize + 'px'}
-			onclick={handlePlayPause}
-		/>
+		<IconButton size={playPauseSize + 'px'} onclick={handlePlayPause}>
+			<PlayIcon />
+		</IconButton>
 	{:else}
-		<IconButton
-			src="/icons/pause.svg"
-			alt="Pause"
-			size={playPauseSize + 'px'}
-			onclick={handlePlayPause}
-		/>
+		<IconButton size={playPauseSize + 'px'} onclick={handlePlayPause}>
+			<PauseIcon />
+		</IconButton>
 	{/if}
 </div>

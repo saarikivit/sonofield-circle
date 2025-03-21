@@ -1,19 +1,21 @@
 import { Octave } from '$lib/types/octave';
+import { getContext, setContext } from 'svelte';
 
 export class CurrentOctaveService {
-	private static instance: CurrentOctaveService;
 	private static readonly STORAGE_KEY = 'current-octave-id';
+	private static readonly key = {};
+
+	public static initializeContext(): CurrentOctaveService {
+		return setContext(this.key, new CurrentOctaveService());
+	}
+
+	public static getContext() {
+		return getContext(this.key) as CurrentOctaveService;
+	}
 
 	#currentOctave = $state<Octave>(this.getStoredOctave());
 
 	private constructor() {}
-
-	public static getInstance(): CurrentOctaveService {
-		if (!CurrentOctaveService.instance) {
-			CurrentOctaveService.instance = new CurrentOctaveService();
-		}
-		return CurrentOctaveService.instance;
-	}
 
 	public get currentOctave(): Octave {
 		return this.#currentOctave;

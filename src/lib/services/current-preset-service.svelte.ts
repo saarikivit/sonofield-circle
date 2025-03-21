@@ -1,20 +1,22 @@
 import type { SynthConfig } from '$lib/types/synth-preset';
 import { SynthPreset } from '$lib/types/synth-preset';
+import { getContext, setContext } from 'svelte';
 
 export class CurrentPresetService {
-	private static instance: CurrentPresetService;
 	private static readonly STORAGE_KEY = 'current-preset-id';
+	private static readonly key = {};
+
+	public static initializeContext(): CurrentPresetService {
+		return setContext(this.key, new CurrentPresetService());
+	}
+
+	public static getContext() {
+		return getContext(this.key) as CurrentPresetService;
+	}
 
 	#currentPreset = $state<SynthConfig>(this.getStoredPreset());
 
 	private constructor() {}
-
-	public static getInstance(): CurrentPresetService {
-		if (!CurrentPresetService.instance) {
-			CurrentPresetService.instance = new CurrentPresetService();
-		}
-		return CurrentPresetService.instance;
-	}
 
 	public get currentPreset(): SynthConfig {
 		return this.#currentPreset;

@@ -1,5 +1,5 @@
 <script lang="ts">
-	let { onclick, src, alt, size } = $props();
+	let { onclick, size, children } = $props();
 </script>
 
 <button
@@ -7,5 +7,5 @@
 	class="absolute flex items-center justify-center"
 	style="width: {size}; height: {size};"
 >
-	<img {src} {alt} style="width: 100%; height: 100%;" />
+	{@render children()}
 </button>

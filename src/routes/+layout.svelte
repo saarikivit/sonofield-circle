@@ -1,7 +1,28 @@
 <script lang="ts">
-	import { AppDownload, AppTitle } from '$lib';
+	import {
+		AppDownload,
+		AppTitle,
+		CircleService,
+		CurrentKeyService,
+		CurrentOctaveService,
+		CurrentPresetService,
+		MidiService,
+		SynthService
+	} from '$lib';
 	import '../app.css';
 	let { children } = $props();
+
+	// Initialize services
+	const currentPresetService = CurrentPresetService.initializeContext();
+	const tonicService = CurrentKeyService.initializeContext();
+	const octaveService = CurrentOctaveService.initializeContext();
+	const synthService = SynthService.initializeContext({ currentPresetService });
+	MidiService.initializeContext();
+	CircleService.initializeContext({
+		synthService,
+		tonicService,
+		octaveService
+	});
 </script>
 
 <div class="flex min-h-screen flex-col overflow-auto">

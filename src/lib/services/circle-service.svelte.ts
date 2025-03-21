@@ -8,28 +8,33 @@ import {
 } from '$lib';
 import { NoteDegree } from '$lib/types/note-degree';
 import * as rive from '@rive-app/canvas';
+import { getContext, setContext } from 'svelte';
 
 export class CircleService {
 	public static readonly maxSize = 600;
+	private static readonly key = {};
 
-	public static instance: CircleService;
+	public static initializeContext({
+		synthService,
+		tonicService,
+		octaveService
+	}: {
+		synthService: SynthService;
+		tonicService: CurrentKeyService;
+		octaveService: CurrentOctaveService;
+	}): CircleService {
+		return setContext(this.key, new CircleService(synthService, tonicService, octaveService));
+	}
+
+	public static getContext() {
+		return getContext(this.key) as CircleService;
+	}
 
 	private constructor(
 		private synthService: SynthService,
 		private tonicService: CurrentKeyService,
 		private octaveService: CurrentOctaveService
 	) {}
-
-	public static getInstance(
-		synthService: SynthService,
-		tonicService: CurrentKeyService,
-		octaveService: CurrentOctaveService
-	): CircleService {
-		if (!CircleService.instance) {
-			CircleService.instance = new CircleService(synthService, tonicService, octaveService);
-		}
-		return CircleService.instance;
-	}
 
 	private r: rive.Rive | null = null;
 

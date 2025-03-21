@@ -18,12 +18,12 @@
 	import { Octave } from '$lib/types/octave';
 	import { SynthEffect, SynthPreset } from '$lib/types/synth-preset';
 
-	const keyService = CurrentKeyService.getInstance();
-	const octaveService = CurrentOctaveService.getInstance();
-	const midiService = MidiService.getInstance();
-	const presetService = CurrentPresetService.getInstance();
-	const synthService = SynthService.getInstance(presetService);
-	const circleService = CircleService.getInstance(synthService, keyService, octaveService);
+	const keyService = CurrentKeyService.getContext();
+	const octaveService = CurrentOctaveService.getContext();
+	const midiService = MidiService.getContext();
+	const presetService = CurrentPresetService.getContext();
+	const synthService = SynthService.getContext();
+	const circleService = CircleService.getContext();
 
 	const onKeyDown = (key: number) => {
 		synthService.playMelody(key);

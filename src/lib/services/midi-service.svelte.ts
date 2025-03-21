@@ -1,3 +1,5 @@
+import { getContext, setContext } from 'svelte';
+
 export interface MidiDevice {
 	id: string | null;
 	name: string | null;
@@ -5,13 +7,20 @@ export interface MidiDevice {
 }
 
 export class MidiService {
-	private static instance: MidiService;
-
 	private static readonly allDevicesItem: MidiDevice = {
 		id: null,
 		name: 'All Devices',
 		manufacturer: null
 	};
+	private static readonly key = {};
+
+	public static initializeContext(): MidiService {
+		return setContext(this.key, new MidiService());
+	}
+
+	public static getContext() {
+		return getContext(this.key) as MidiService;
+	}
 
 	#hasAccess: boolean | null = $state(null);
 	public get hasAccess(): boolean | null {
@@ -34,13 +43,6 @@ export class MidiService {
 	}
 
 	private constructor() {}
-
-	public static getInstance(): MidiService {
-		if (!MidiService.instance) {
-			MidiService.instance = new MidiService();
-		}
-		return MidiService.instance;
-	}
 
 	public setSelectedDevice = ({
 		deviceId,
