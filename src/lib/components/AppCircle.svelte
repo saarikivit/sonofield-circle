@@ -12,7 +12,7 @@
 	let innerWidth = $state(window.innerWidth);
 	let innerHeight = $state(window.innerHeight);
 	let minDimension = $derived(Math.min(innerWidth, innerHeight));
-	let size = $derived(Math.min(minDimension, 600));
+	let size = $derived(Math.min(minDimension, CircleService.maxSize));
 	let playPauseSize = $derived(size * 0.15);
 
 	const presetService = CurrentPresetService.getInstance();

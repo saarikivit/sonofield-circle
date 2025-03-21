@@ -10,6 +10,8 @@ import { NoteDegree } from '$lib/types/note-degree';
 import * as rive from '@rive-app/canvas';
 
 export class CircleService {
+	public static readonly maxSize = 600;
+
 	public static instance: CircleService;
 
 	private constructor(

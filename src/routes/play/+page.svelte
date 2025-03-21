@@ -1,6 +1,6 @@
 <script>
-	import { AppCircle, ControlPanel } from '$lib';
+	import { AppCircle } from '$lib';
 </script>
 
-<ControlPanel />
+<!-- <ControlPanel /> -->
 <AppCircle />
