@@ -4,6 +4,8 @@ export { default as AppTitle } from './AppTitle.svelte';
 export { default as ChorusConfiguration } from './ChorusConfiguration.svelte';
 export { default as ControlPanel } from './ControlPanel.svelte';
 export { default as IconButton } from './IconButton.svelte';
+export { default as TuneIcon } from './icons/TuneIcon.svelte';
 export { default as ReverbConfiguration } from './ReverbConfiguration.svelte';
+export { default as SettingsButton } from './SettingsButton.svelte';
 export { default as SynthConfiguration } from './SynthConfiguration.svelte';
 export { default as Wordmark } from './Wordmark.svelte';
