@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { AppTitle } from '$lib';
+	import { AppDownload, AppTitle } from '$lib';
 	import '../app.css';
 	let { children } = $props();
 </script>
@@ -12,6 +12,10 @@
 	<main class="flex flex-1 flex-col gap-8 p-4">
 		{@render children()}
 	</main>
+
+	<footer class="w-full px-4 py-2">
+		<AppDownload />
+	</footer>
 </div>
 
 <style>
