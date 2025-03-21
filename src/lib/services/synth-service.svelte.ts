@@ -66,7 +66,7 @@ export class SynthService {
 		this.droneInputChannel.chain(this.#droneChorus, this.#droneReverb, compressor, masterChannel);
 	}
 
-	private droneSynth?: Tone.PolySynth;
+	private droneSynth?: Tone.MonoSynth;
 	private melodySynth?: Tone.PolySynth | Tone.MonoSynth;
 
 	#isInitialized = $state(false);
@@ -93,7 +93,7 @@ export class SynthService {
 
 	private setDroneSynth() {
 		// Connect drone synth through the effects chain
-		this.droneSynth = new Tone.PolySynth(Tone.Synth, {
+		this.droneSynth = new Tone.MonoSynth({
 			...SynthPreset.drone.config,
 			volume: -12 // Reduce drone volume
 		});
@@ -146,7 +146,7 @@ export class SynthService {
 		if (!this.#isPlaying) return;
 		this.#isPlaying = false;
 
-		this.droneSynth?.releaseAll();
+		this.droneSynth?.triggerRelease();
 	}
 
 	public stopMelody(midi: number) {
