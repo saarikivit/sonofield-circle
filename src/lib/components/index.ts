@@ -4,3 +4,4 @@ export { default as ChorusConfiguration } from './ChorusConfiguration.svelte';
 export { default as ControlPanel } from './ControlPanel.svelte';
 export { default as ReverbConfiguration } from './ReverbConfiguration.svelte';
 export { default as SynthConfiguration } from './SynthConfiguration.svelte';
+export { default as Wordmark } from './Wordmark.svelte';
