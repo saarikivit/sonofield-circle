@@ -100,14 +100,14 @@ export class SynthService {
 	}
 
 	public async initialize() {
+		if (this.#isInitialized) return;
+
 		await Tone.start();
 
 		this.initializeMasterChannel();
 
 		this.setDroneSynth();
 		this.setMelodySynth(this.currentPresetService.currentPreset.id);
-
-		console.log('SynthService initialized');
 		this.#isInitialized = true;
 	}
 

@@ -159,6 +159,7 @@
 <div class="flex w-full flex-row gap-4">
 	<div class="flex-1">
 		<VolumeConfiguration
+			name="melody-volume"
 			title="Melody Volume"
 			volume={currentVolumeService.currentMelodyVolume}
 			onUpdateVolume={handleMelodyVolumeChange}
@@ -166,6 +167,7 @@
 	</div>
 	<div class="flex-1">
 		<VolumeConfiguration
+			name="drone-volume"
 			title="Drone Volume"
 			volume={currentVolumeService.currentDroneVolume}
 			onUpdateVolume={handleDroneVolumeChange}
