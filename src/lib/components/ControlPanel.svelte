@@ -27,13 +27,13 @@
 
 	const onKeyDown = (key: number) => {
 		synthService.playMelody(key);
-		const index = DegreeHelper.getCOFIndexByKey(key);
+		const index = DegreeHelper.getCOFIndexByKey(key, keyService.currentKey);
 		circleService.highlightDegree(index);
 	};
 
 	const onKeyUp = (key: number) => {
 		synthService.stopMelody(key);
-		const index = DegreeHelper.getCOFIndexByKey(key);
+		const index = DegreeHelper.getCOFIndexByKey(key, keyService.currentKey);
 		circleService.unhighlightDegree(index);
 	};
 
