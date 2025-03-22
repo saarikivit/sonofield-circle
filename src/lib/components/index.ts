@@ -10,4 +10,5 @@ export { default as TuneIcon } from './icons/TuneIcon.svelte';
 export { default as ReverbConfiguration } from './ReverbConfiguration.svelte';
 export { default as SettingsButton } from './SettingsButton.svelte';
 export { default as SynthConfiguration } from './SynthConfiguration.svelte';
+export { default as VolumeConfiguration } from './VolumeConfiguration.svelte';
 export { default as Wordmark } from './Wordmark.svelte';

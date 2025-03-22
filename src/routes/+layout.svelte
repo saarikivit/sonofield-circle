@@ -9,6 +9,7 @@
 		MidiService,
 		SynthService
 	} from '$lib';
+	import { CurrentVolumeService } from '$lib/services/current-volume-service.svelte';
 	import '../app.css';
 	let { children } = $props();
 
@@ -16,7 +17,11 @@
 	const currentPresetService = CurrentPresetService.initializeContext();
 	const tonicService = CurrentKeyService.initializeContext();
 	const octaveService = CurrentOctaveService.initializeContext();
-	const synthService = SynthService.initializeContext({ currentPresetService });
+	const currentVolumeService = CurrentVolumeService.initializeContext();
+	const synthService = SynthService.initializeContext({
+		currentPresetService,
+		currentVolumeService
+	});
 	MidiService.initializeContext();
 	CircleService.initializeContext({
 		synthService,

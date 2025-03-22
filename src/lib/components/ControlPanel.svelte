@@ -5,13 +5,15 @@
 		CurrentKeyService,
 		CurrentOctaveService,
 		CurrentPresetService,
+		CurrentVolumeService,
 		DegreeHelper,
 		MidiService,
 		NoteNameHelper,
 		OctaveHelper,
 		ReverbConfiguration,
 		SynthConfiguration,
-		SynthService
+		SynthService,
+		VolumeConfiguration
 	} from '$lib';
 
 	import { NoteName } from '$lib/types/note-name';
@@ -24,6 +26,7 @@
 	const presetService = CurrentPresetService.getContext();
 	const synthService = SynthService.getContext();
 	const circleService = CircleService.getContext();
+	const currentVolumeService = CurrentVolumeService.getContext();
 
 	const onKeyDown = (key: number) => {
 		synthService.playMelody(key);
@@ -72,6 +75,18 @@
 		const select = event.target as HTMLSelectElement;
 		const value = select.value;
 		presetService.setPreset(value);
+	}
+
+	function handleMelodyVolumeChange(event: Event) {
+		const input = event.target as HTMLInputElement;
+		const value = parseFloat(input.value);
+		synthService.setMelodyVolume(value);
+	}
+
+	function handleDroneVolumeChange(event: Event) {
+		const input = event.target as HTMLInputElement;
+		const value = parseFloat(input.value);
+		synthService.setDroneVolume(value);
 	}
 </script>
 
@@ -138,6 +153,23 @@
 				<option value={preset.id}>{preset.name}</option>
 			{/each}
 		</select>
+	</div>
+</div>
+
+<div class="flex w-full flex-row gap-4">
+	<div class="flex-1">
+		<VolumeConfiguration
+			title="Melody Volume"
+			volume={currentVolumeService.currentMelodyVolume}
+			onUpdateVolume={handleMelodyVolumeChange}
+		/>
+	</div>
+	<div class="flex-1">
+		<VolumeConfiguration
+			title="Drone Volume"
+			volume={currentVolumeService.currentDroneVolume}
+			onUpdateVolume={handleDroneVolumeChange}
+		/>
 	</div>
 </div>
 

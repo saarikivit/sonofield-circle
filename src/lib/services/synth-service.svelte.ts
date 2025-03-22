@@ -2,23 +2,29 @@ import { SynthEffect, SynthPreset } from '$lib/types/synth-preset';
 import { getContext, setContext } from 'svelte';
 import * as Tone from 'tone';
 import type { CurrentPresetService } from './current-preset-service.svelte';
+import type { CurrentVolumeService } from './current-volume-service.svelte';
 
 export class SynthService {
 	private static readonly key = {};
 
 	public static initializeContext({
-		currentPresetService
+		currentPresetService,
+		currentVolumeService
 	}: {
 		currentPresetService: CurrentPresetService;
+		currentVolumeService: CurrentVolumeService;
 	}): SynthService {
-		return setContext(this.key, new SynthService(currentPresetService));
+		return setContext(this.key, new SynthService(currentPresetService, currentVolumeService));
 	}
 
 	public static getContext() {
 		return getContext(this.key) as SynthService;
 	}
 
-	private constructor(private currentPresetService: CurrentPresetService) {}
+	private constructor(
+		private currentPresetService: CurrentPresetService,
+		private currentVolumeService: CurrentVolumeService
+	) {}
 
 	private melodyInputChannel?: Tone.Channel;
 	private droneInputChannel?: Tone.Channel;
@@ -40,10 +46,18 @@ export class SynthService {
 		return this.#droneChorus;
 	}
 
+	public get currentMelodyVolume() {
+		return this.currentVolumeService.currentMelodyVolume;
+	}
+
+	public get currentDroneVolume() {
+		return this.currentVolumeService.currentDroneVolume;
+	}
+
 	private initializeMasterChannel() {
 		// Create master compressor to prevent clipping
 		const compressor = new Tone.Compressor({
-			threshold: -15,
+			threshold: -10,
 			ratio: 3,
 			attack: 0.05,
 			release: 0.1
@@ -51,7 +65,7 @@ export class SynthService {
 
 		// Create master channel with moderate gain reduction
 		const masterChannel = new Tone.Channel({
-			volume: -6,
+			volume: -3,
 			pan: 0
 		}).toDestination();
 
@@ -101,8 +115,9 @@ export class SynthService {
 		// Connect drone synth through the effects chain
 		this.droneSynth = new Tone.MonoSynth({
 			...SynthPreset.drone.config,
-			volume: -12 // Reduce drone volume
+			volume: this.currentVolumeService.currentDroneVolume
 		});
+
 		this.droneSynth.connect(this.droneInputChannel!);
 	}
 
@@ -114,17 +129,16 @@ export class SynthService {
 		this.melodySynth?.dispose();
 		this.currentPresetService.setPreset(presetId);
 
+		const config = {
+			...preset.config,
+			volume: this.currentVolumeService.currentMelodyVolume
+		};
+
 		// Create new synth with the selected preset
 		if (preset.type === 'poly') {
-			this.melodySynth = new Tone.PolySynth(Tone.Synth, {
-				...preset.config,
-				volume: -6
-			});
+			this.melodySynth = new Tone.PolySynth(Tone.Synth, config);
 		} else {
-			this.melodySynth = new Tone.MonoSynth({
-				...preset.config,
-				volume: -6
-			});
+			this.melodySynth = new Tone.MonoSynth(config);
 		}
 
 		// Connect through filter then to effects for parallel processing
@@ -214,6 +228,22 @@ export class SynthService {
 		};
 
 		return options;
+	};
+
+	public setDroneVolume = (volume: number) => {
+		if (!this.droneSynth) return;
+		this.droneSynth.set({
+			volume: volume
+		});
+		this.currentVolumeService.setDroneVolume(volume);
+	};
+
+	public setMelodyVolume = (volume: number) => {
+		if (!this.melodySynth) return;
+		this.melodySynth.set({
+			volume: volume
+		});
+		this.currentVolumeService.setMelodyVolume(volume);
 	};
 
 	public configureMelodyReverb = (options: Partial<Tone.FreeverbOptions>) => {
