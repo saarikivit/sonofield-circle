@@ -29,7 +29,7 @@ export class SynthService {
 	private melodyInputChannel?: Tone.Channel;
 	private droneInputChannel?: Tone.Channel;
 
-	#melodyReverb?: Tone.Freeverb;
+	#melodyReverb?: Tone.Reverb;
 	public get melodyReverb() {
 		return this.#melodyReverb;
 	}
@@ -37,7 +37,7 @@ export class SynthService {
 	public get melodyChorus() {
 		return this.#melodyChorus;
 	}
-	#droneReverb?: Tone.Freeverb;
+	#droneReverb?: Tone.Reverb;
 	public get droneReverb() {
 		return this.#droneReverb;
 	}
@@ -72,9 +72,9 @@ export class SynthService {
 		this.melodyInputChannel = new Tone.Channel();
 		this.droneInputChannel = new Tone.Channel();
 
-		this.#melodyReverb = new Tone.Freeverb(SynthEffect.reverb.config);
+		this.#melodyReverb = new Tone.Reverb(SynthEffect.reverb.config);
 		this.#melodyChorus = new Tone.Chorus(SynthEffect.chorus.config);
-		this.#droneReverb = new Tone.Freeverb(SynthEffect.reverb.config);
+		this.#droneReverb = new Tone.Reverb(SynthEffect.reverb.config);
 		this.#droneChorus = new Tone.Chorus(SynthEffect.chorus.config);
 
 		this.melodyInputChannel.chain(
@@ -278,10 +278,7 @@ export class SynthService {
 		this.#droneChorus.set(nextOptions);
 	};
 
-	private calculateNextReverbOptions = (
-		currentOptions: Tone.FreeverbOptions,
-		nextOptions: Partial<Tone.FreeverbOptions>
-	) => {
+	private calculateNextReverbOptions = (currentOptions: any, nextOptions: any) => {
 		let options = {
 			...currentOptions,
 			...nextOptions

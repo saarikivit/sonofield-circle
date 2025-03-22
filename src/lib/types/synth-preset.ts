@@ -22,7 +22,7 @@ export interface ChorusConfig {
 export interface ReverbConfig {
 	id: string;
 	name: string;
-	config: Partial<Tone.FreeverbOptions>;
+	config: any;
 }
 
 export class SynthEffect {
@@ -30,8 +30,8 @@ export class SynthEffect {
 		id: 'reverb',
 		name: 'Reverb',
 		config: {
-			dampening: 1000,
-			roomSize: 0.5,
+			decay: 3,
+			preDelay: 0.1,
 			wet: 0.5
 		}
 	};

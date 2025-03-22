@@ -52,7 +52,7 @@ export class CurrentVolumeService {
 		} catch (error) {
 			console.warn('Failed to read volume from localStorage:', error);
 		}
-		return 0; // Default volume
+		return -6; // Default volume
 	}
 
 	private saveVolumeToStorage(volume: number, type: 'melody' | 'drone'): void {
