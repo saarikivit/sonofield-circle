@@ -25,6 +25,12 @@ export interface ReverbConfig {
 	config: any;
 }
 
+export interface FilterEnvelopeConfig {
+	id: string;
+	name: string;
+	config: Partial<Tone.FrequencyEnvelopeOptions>;
+}
+
 export class SynthEffect {
 	public static readonly reverb: ReverbConfig = {
 		id: 'reverb',
@@ -56,10 +62,49 @@ export class SynthFilter {
 		id: 'melody',
 		name: 'Melody',
 		config: {
-			type: 'lowpass',
-			frequency: 2000,
+			type: 'highpass',
+			frequency: 1500,
 			Q: 1,
 			rolloff: -24
+		}
+	};
+
+	public static readonly droneFilter: SynthFilterConfig = {
+		id: 'drone',
+		name: 'Drone',
+		config: {
+			type: 'lowpass',
+			frequency: 1500,
+			Q: 1,
+			rolloff: -24
+		}
+	};
+
+	public static readonly melodyFilterEnvelope: FilterEnvelopeConfig = {
+		id: 'melody',
+		name: 'Melody',
+		config: {
+			attack: 0.01,
+			decay: 0.1,
+			sustain: 0.5,
+			release: 0.1,
+			baseFrequency: 1500,
+			octaves: 4,
+			exponent: 2
+		}
+	};
+
+	public static readonly droneFilterEnvelope: FilterEnvelopeConfig = {
+		id: 'drone',
+		name: 'Drone',
+		config: {
+			attack: 0.01,
+			decay: 0.1,
+			sustain: 0.5,
+			release: 0.1,
+			baseFrequency: 1500,
+			octaves: 4,
+			exponent: 2
 		}
 	};
 }

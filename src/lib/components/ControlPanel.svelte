@@ -18,7 +18,8 @@
 
 	import { NoteName } from '$lib/types/note-name';
 	import { Octave } from '$lib/types/octave';
-	import { SynthEffect, SynthPreset } from '$lib/types/synth-preset';
+	import { SynthEffect, SynthFilter, SynthPreset } from '$lib/types/synth-preset';
+	import FilterConfiguration from './FilterConfiguration.svelte';
 
 	const keyService = CurrentKeyService.getContext();
 	const octaveService = CurrentOctaveService.getContext();
@@ -156,8 +157,8 @@
 	</div>
 </div>
 
-<div class="flex w-full flex-row gap-4">
-	<div class="flex-1">
+<div class="flex w-full flex-row gap-4 py-2">
+	<div class="flex-1 gap-1">
 		<VolumeConfiguration
 			name="melody-volume"
 			title="Melody Volume"
@@ -165,7 +166,7 @@
 			onUpdateVolume={handleMelodyVolumeChange}
 		/>
 	</div>
-	<div class="flex-1">
+	<div class="flex-1 gap-1">
 		<VolumeConfiguration
 			name="drone-volume"
 			title="Drone Volume"
@@ -175,50 +176,64 @@
 	</div>
 </div>
 
-<div class="flex w-full flex-row gap-4">
-	<div class="flex-1">
+<div class="flex w-full flex-row gap-4 py-2">
+	<div class="flex-1 gap-1">
 		<SynthConfiguration
 			onConfigChange={synthService.configureMelodySynth}
 			initialConfig={presetService.currentPreset.config}
 			title="Melody Synth"
 		/>
 	</div>
-	<div class="flex-1">
+	<div class="flex-1 gap-1">
 		<ReverbConfiguration
 			onConfigChange={synthService.configureMelodyReverb}
 			initialConfig={SynthEffect.reverb.config}
 			title="Melody Reverb"
 		/>
 	</div>
-	<div class="flex-1">
+	<div class="flex-1 gap-1">
 		<ChorusConfiguration
 			onConfigChange={synthService.configureMelodyChorus}
 			initialConfig={SynthEffect.chorus.config}
 			title="Melody Chorus"
 		/>
 	</div>
+	<div class="flex-1 gap-1">
+		<FilterConfiguration
+			onConfigChange={synthService.configureMelodyFilter}
+			initialConfig={SynthFilter.melodyFilter.config}
+			title="Melody Filter"
+		/>
+	</div>
 </div>
 
-<div class="flex w-full flex-row gap-4">
-	<div class="flex-1">
+<div class="flex w-full flex-row gap-4 py-2">
+	<div class="flex-1 gap-1">
 		<SynthConfiguration
 			onConfigChange={synthService.configureDroneSynth}
 			initialConfig={presetService.currentPreset.config}
 			title="Drone Synth"
 		/>
 	</div>
-	<div class="flex-1">
+	<div class="flex-1 gap-1">
 		<ReverbConfiguration
 			onConfigChange={synthService.configureDroneReverb}
 			initialConfig={SynthEffect.reverb.config}
 			title="Drone Reverb"
 		/>
 	</div>
-	<div class="flex-1">
+	<div class="flex-1 gap-1">
 		<ChorusConfiguration
 			onConfigChange={synthService.configureDroneChorus}
 			initialConfig={SynthEffect.chorus.config}
 			title="Drone Chorus"
+		/>
+	</div>
+	<div class="flex-1 gap-1">
+		<FilterConfiguration
+			onConfigChange={synthService.configureDroneFilter}
+			initialConfig={SynthFilter.droneFilter.config}
+			title="Drone Filter"
 		/>
 	</div>
 </div>
