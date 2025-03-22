@@ -74,11 +74,6 @@ export class SynthService {
 	}
 
 	private initializeMasterChannel() {
-		this.#droneSynth = new Tone.MonoSynth({
-			...SynthPreset.drone.config,
-			volume: this.currentVolumeService.currentDroneVolume
-		});
-
 		// Create master compressor to prevent clipping
 		const compressor = new Tone.Compressor({
 			threshold: -10,
@@ -109,8 +104,8 @@ export class SynthService {
 		);
 		this.#droneFilterEnvelope = new Tone.FrequencyEnvelope(SynthFilter.droneFilterEnvelope.config);
 
-		this.#melodyFilter.connect(this.#melodyFilterEnvelope);
-		this.#droneFilter.connect(this.#droneFilterEnvelope);
+		this.#melodyFilterEnvelope.connect(this.#melodyFilter.frequency);
+		this.#droneFilterEnvelope.connect(this.#droneFilter.frequency);
 
 		this.#melodyInputChannel.chain(
 			this.#melodyChorus,
@@ -150,8 +145,7 @@ export class SynthService {
 			volume: this.currentVolumeService.currentDroneVolume
 		});
 
-		this.#droneSynth!.connect(this.#droneFilter!);
-		this.#droneSynth!.connect(this.#droneInputChannel!);
+		this.#droneSynth!.chain(this.#droneFilter!, this.#droneInputChannel!);
 	}
 
 	public setMelodySynth(presetId: string) {
@@ -175,8 +169,7 @@ export class SynthService {
 		}
 
 		// Connect through filter then to effects for parallel processing
-		this.#melodySynth?.connect(this.#melodyFilter!);
-		this.#melodySynth.connect(this.#melodyInputChannel!);
+		this.#melodySynth?.chain(this.#melodyFilter!, this.#melodyInputChannel!);
 	}
 
 	private midiToNote(midi: number): string {
@@ -188,11 +181,13 @@ export class SynthService {
 		this.#isPlaying = true;
 
 		const note = this.midiToNote(midi);
+		this.#droneFilterEnvelope?.triggerAttack();
 		this.#droneSynth?.triggerAttack(note);
 	}
 
 	public playMelody(midi: number) {
 		const note = this.midiToNote(midi);
+		this.#melodyFilterEnvelope?.triggerAttack();
 		this.#melodySynth?.triggerAttack(note);
 	}
 
@@ -200,11 +195,13 @@ export class SynthService {
 		if (!this.#isPlaying) return;
 		this.#isPlaying = false;
 
+		this.#droneFilterEnvelope?.triggerRelease();
 		this.#droneSynth?.triggerRelease();
 	}
 
 	public stopMelody(midi: number) {
 		const note = this.midiToNote(midi);
+		this.#melodyFilterEnvelope?.triggerRelease();
 		if (this.#melodySynth instanceof Tone.PolySynth) {
 			// Properly release the voice for this note
 			this.#melodySynth.triggerRelease(note);

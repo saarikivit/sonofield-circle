@@ -66,7 +66,7 @@
 				id="Q"
 				bind:value={Q}
 				min="1"
-				max="64"
+				max="8"
 				step="1"
 				class="w-full accent-[#000000]"
 			/>

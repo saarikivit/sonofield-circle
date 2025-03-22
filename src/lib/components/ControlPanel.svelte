@@ -7,6 +7,7 @@
 		CurrentPresetService,
 		CurrentVolumeService,
 		DegreeHelper,
+		FilterEnvelopeConfiguration,
 		MidiService,
 		NoteNameHelper,
 		OctaveHelper,
@@ -205,6 +206,13 @@
 			title="Melody Filter"
 		/>
 	</div>
+	<div class="flex-1 gap-1">
+		<FilterEnvelopeConfiguration
+			onConfigChange={synthService.configureMelodyFilterEnvelope}
+			initialConfig={SynthFilter.melodyFilterEnvelope.config}
+			title="Melody Filter Envelope"
+		/>
+	</div>
 </div>
 
 <div class="flex w-full flex-row gap-4 py-2">
@@ -234,6 +242,13 @@
 			onConfigChange={synthService.configureDroneFilter}
 			initialConfig={SynthFilter.droneFilter.config}
 			title="Drone Filter"
+		/>
+	</div>
+	<div class="flex-1 gap-1">
+		<FilterEnvelopeConfiguration
+			onConfigChange={synthService.configureDroneFilterEnvelope}
+			initialConfig={SynthFilter.droneFilterEnvelope.config}
+			title="Drone Filter Envelope"
 		/>
 	</div>
 </div>

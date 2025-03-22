@@ -84,13 +84,15 @@ export class SynthFilter {
 		id: 'melody',
 		name: 'Melody',
 		config: {
-			attack: 0.01,
-			decay: 0.1,
+			attack: 0.15,
+			decay: 0.15,
 			sustain: 0.5,
 			release: 0.1,
-			baseFrequency: 1500,
 			octaves: 4,
-			exponent: 2
+			exponent: 2,
+			attackCurve: 'linear',
+			decayCurve: 'exponential',
+			releaseCurve: 'exponential'
 		}
 	};
 
@@ -98,13 +100,15 @@ export class SynthFilter {
 		id: 'drone',
 		name: 'Drone',
 		config: {
-			attack: 0.01,
-			decay: 0.1,
+			attack: 0.15,
+			decay: 0.15,
 			sustain: 0.5,
 			release: 0.1,
-			baseFrequency: 1500,
 			octaves: 4,
-			exponent: 2
+			exponent: 2,
+			attackCurve: 'linear',
+			decayCurve: 'exponential',
+			releaseCurve: 'exponential'
 		}
 	};
 }
